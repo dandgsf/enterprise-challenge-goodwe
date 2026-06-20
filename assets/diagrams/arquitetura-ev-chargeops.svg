@@ -21,7 +21,7 @@
 
   <rect class="bg" x="0" y="0" width="1280" height="760"/>
   <text x="54" y="50" fill="#182326" font-family="Arial, sans-serif" font-size="30" font-weight="700">EV ChargeOps - arquitetura proposta</text>
-  <text x="54" y="80" fill="#526064" font-family="Arial, sans-serif" font-size="15">MVP orientado a relatórios do Sense Plus, com adaptadores para API futura e integração técnica validada.</text>
+  <text x="54" y="80" fill="#526064" font-family="Arial, sans-serif" font-size="15">MVP orientado a dados SEMS/Sense Plus disponíveis, sessões confirmadas e integração técnica futura.</text>
 
   <rect class="layer" x="44" y="115" width="270" height="575" rx="12"/>
   <text class="layer-title" x="68" y="150">1. Física</text>
@@ -48,12 +48,12 @@
   <text class="layer-title" x="378" y="150">2. Conectividade</text>
 
   <rect class="box-alt" x="378" y="185" width="220" height="86"/>
-  <text class="label" x="398" y="218">Sense Plus</text>
+  <text class="label" x="398" y="218">SEMS/Sense Plus</text>
   <text class="small" x="398" y="242">web/app monitoramento</text>
 
   <rect class="box" x="378" y="305" width="220" height="80"/>
-  <text class="label" x="398" y="338">Relatórios</text>
-  <text class="small" x="398" y="360">CSV, Excel ou PDF</text>
+  <text class="label" x="398" y="338">Relatórios/arquivos</text>
+  <text class="small" x="398" y="360">se disponíveis</text>
 
   <rect class="box" x="378" y="420" width="220" height="80"/>
   <text class="label" x="398" y="452">Solar Go</text>

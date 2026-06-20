@@ -44,11 +44,13 @@ Uso no projeto:
 
 - GoodWe SEMS/Sense Plus. Disponível em: https://semsplus.goodwe.com/
 - Mentoria GoodWe/FIAP. Transcript local anexado.
+- Inspeção visual autorizada do SEMS Portal no Comet Browser, realizada em 20/06/2026.
 
 Uso no projeto:
 
 - A página do Sense Plus foi usada como referência de plataforma indicada pelo enunciado.
 - As informações específicas sobre modelo GW7K HC20/HCA G2, 7 kW, app Sense Plus, Solar Go, Modbus, RFID e ausência de API liberada foram extraídas da mentoria, não inferidas de página pública.
+- A inspeção visual do SEMS Portal mostrou dados agregados de planta, geração, renda, curvas de potência, estatísticas energéticas, tela de relatórios por inversor/indicador e telas de gerenciamento. Não foi observada, nessa navegação, tela web explícita de sessões do carregador por RFID/usuário.
 
 Observação:
 
@@ -101,7 +103,7 @@ Uso no projeto:
 
 - Benchmark da Frente 1 - Opção A.
 - Identificação de funcionalidades já existentes: cobrança por recarga, controle de acesso, relatórios, status em tempo real, balanceamento de carga, histórico de sessões e monitoramento de energia.
-- Identificação de lacunas que o EV ChargeOps pode explorar: rateio auditável, importação de relatórios do Sense Plus, IA operacional e foco em gestão compartilhada brasileira.
+- Identificação de lacunas que o EV ChargeOps pode explorar: rateio auditável, importação de dados disponíveis do SEMS/Sense Plus, relatórios de sessão quando confirmados, IA operacional e foco em gestão compartilhada brasileira.
 
 ## IA e Modelagem
 
@@ -117,7 +119,8 @@ Uso no projeto:
 ## Observações da Mentoria que Afetam o MVP
 
 - API pública para carregadores: mencionada como em desenvolvimento, mas não liberada para os alunos nesta etapa.
-- Fonte prática de dados: Sense Plus, com visualização de histórico e possibilidade de exportar relatórios conforme acesso disponível.
+- Fonte prática de dados: SEMS/Sense Plus, com visualização de dados da planta e possibilidade de relatórios conforme acesso disponível.
+- Validação posterior: o SEMS web observado confirma dados agregados da planta, mas não confirma por si só exportação de sessões de carregador/RFID.
 - Equipamento real: GoodWe GW7K HC20, linha HCA G2, 7 kW, CA.
 - Identificação: suporte a cartões RFID, com limite nativo de até 10 cartões.
 - Comunicação: Modbus; não há OCPP no carregador citado.

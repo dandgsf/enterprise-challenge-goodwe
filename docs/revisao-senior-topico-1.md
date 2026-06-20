@@ -15,18 +15,18 @@ O ponto principal da revisão foi transformar o texto de "pesquisa sobre recarga
 | OCPP tratado de forma muito ampla | Poderia sugerir que o carregador GoodWe usa OCPP. | Ajuste para indicar que OCPP é referência de mercado, mas o HCA G2 usa Modbus. |
 | Sense Plus pouco explorado | O projeto deixaria passar a principal fonte prática de dados. | Inclusão do Sense Plus como fonte de histórico, potência, energia, status e relatórios. |
 | Limite de RFID ausente | O problema de escala em condomínios ficaria fraco. | Inclusão do limite de até 10 cartões RFID como dor de escala. |
-| MVP ainda amplo | A solução poderia tentar resolver tudo ao mesmo tempo. | Recomendação de MVP focado em rateio/cobrança a partir de relatórios do Sense Plus. |
+| MVP ainda amplo | A solução poderia tentar resolver tudo ao mesmo tempo. | Recomendação de MVP focado em rateio/cobrança com sessões reais quando confirmadas e dados SEMS como contexto energético. |
 
 ## Decisão de Produto
 
 O MVP mais forte para a Sprint 02 deve ser:
 
-> Importar relatórios de sessões do Sense Plus, organizar os dados por usuário/unidade/RFID, calcular consumo e rateio, gerar relatório mensal e aplicar inteligência para detectar anomalias, horários de pico e padrões de demanda.
+> Importar dados energéticos disponíveis no SEMS/Sense Plus, integrar relatórios reais de sessões quando a exportação do carregador for confirmada, organizar os dados por usuário/unidade/RFID quando esses campos existirem, calcular consumo e rateio, gerar relatório mensal e aplicar inteligência para detectar anomalias, horários de pico e padrões de demanda.
 
 Essa escolha é melhor do que começar pelo controle dinâmico de demanda porque:
 
 - não depende de API pública;
-- pode usar CSV, Excel, PDF ou dados simulados no mesmo formato dos relatórios;
+- pode usar dados SEMS de planta, CSV/Excel/PDF quando confirmados e dados simulados no formato esperado para sessões;
 - resolve diretamente a dor de condomínios e ambientes compartilhados;
 - cria uma base de dados útil para IA na próxima sprint;
 - respeita as limitações reais do carregador instalado na FIAP.
@@ -43,3 +43,12 @@ Após a revisão, o Tópico 1 deixou de ser "água com açúcar". Ele agora tem:
 - leitura crítica das lacunas da GoodWe/Sense Plus;
 - recomendação objetiva de MVP.
 
+## Complemento Após Validação do SEMS Portal
+
+Em 20/06/2026, foi feita uma inspeção visual do SEMS Portal web. A tela observada mostrou dados de planta, geração fotovoltaica, bateria, renda, curvas de potência, estatísticas energéticas e relatórios por inversor/indicador.
+
+Ponto crítico: nessa navegação web, não foi observada uma tela explícita com sessões do carregador, RFID ou usuário. Portanto, a documentação foi ajustada para não prometer que o SEMS web, sozinho, fornece a base completa de rateio.
+
+A decisão de MVP ficou mais precisa:
+
+> Usar dados agregados do SEMS para contexto energético e usar sessões reais somente quando a exportação do carregador for confirmada. Até lá, implementar o motor de rateio com dataset simulado e arquitetura preparada para receber a fonte real.

@@ -10,17 +10,18 @@ O caminho mais realista para a Sprint 2 é:
 
 1. acessar a planta `labrifiap eco smart home` no Sense Plus;
 2. visualizar o carregador **GW7K HC20/HCA G2**;
-3. exportar ou consultar relatórios de sessões, conforme acesso disponível;
-4. importar esses dados no EV ChargeOps;
-5. calcular consumo, rateio, alertas e indicadores.
+3. separar o que é dado energético agregado da planta do que é dado específico de sessão do carregador;
+4. exportar ou consultar relatórios disponíveis, conforme acesso e formato real;
+5. importar dados agregados do SEMS e usar dataset simulado para sessões enquanto a exportação real do carregador não for confirmada;
+6. calcular consumo, rateio, alertas e indicadores quando houver base de sessão validada.
 
 ## Premissas Vindas da Mentoria GoodWe/FIAP
 
 | Tema | O que foi esclarecido | Impacto no projeto |
 | --- | --- | --- |
 | Equipamento base | GoodWe GW7K HC20, linha HCA G2, geração 2, 7 kW, corrente alternada. | A solução deve ser pensada para um carregador AC residencial/semi-compartilhado, não para eletroposto DC de alta potência. |
-| Plataforma operacional | Sense Plus, com versão web e app. Solar Go é mais voltado ao comissionamento local. | O Sense Plus vira a fonte prática de histórico, potência, energia, status e relatórios. |
-| API | A API para carregadores está em desenvolvimento, mas não será liberada para os alunos nesta fase. | O MVP não deve depender de API. Deve aceitar CSV, Excel, PDF ou dados simulados no mesmo formato dos relatórios. |
+| Plataforma operacional | Sense Plus/SEMS, com versão web e app. Solar Go é mais voltado ao comissionamento local. | O SEMS/Sense Plus vira fonte prática de dados da planta, potência, energia, status e relatórios. Sessões do carregador/RFID precisam ser confirmadas em exportação específica. |
+| API | A API para carregadores está em desenvolvimento, mas não será liberada para os alunos nesta fase. | O MVP não deve depender de API. Deve aceitar dados SEMS disponíveis, CSV/Excel/PDF quando confirmados e dados simulados para sessões. |
 | Protocolo | O carregador trabalha com Modbus, não OCPP. | Não se deve vender a ideia como integração pronta com plataformas OCPP de cobrança. |
 | RFID | O carregador vem com 2 cartões e suporta até 10 cartões configuráveis. | O limite de identificação nativa é uma dor real para condomínios maiores. |
 | Cobrança | Não há cobrança automática integrada ao carregador atual. | O cálculo de rateio/cobrança é o coração da solução, não um acessório. |
@@ -106,23 +107,25 @@ Requisitos mínimos:
 | Wi-Fi | Conexão do carregador à internet/plataforma de monitoramento. | Fonte indireta para que o Sense Plus receba histórico e status. |
 | Bluetooth | Configuração local próxima ao equipamento, especialmente via Solar Go. | Usar para comissionamento e diagnóstico local, não como canal principal de dados do MVP. |
 | RFID | Autorização local de usuários por cartão. | Mapear RFID para usuário/unidade no EV ChargeOps. Tratar o limite de até 10 cartões como risco de escala. |
-| Sense Plus | Visualização remota de histórico, potência, energia, status, modos e relatórios. | Fonte operacional principal para importação de relatórios e conferência mensal. |
+| Sense Plus/SEMS | Visualização remota de planta, potência, energia, status, modos e relatórios. | Fonte operacional para dados energéticos agregados e possível fonte de relatórios do carregador, desde que a exportação de sessões seja confirmada. |
 | Solar Go | Aplicativo de comissionamento/configuração local. | Apoiar configuração inicial, pareamento e diagnóstico; não é a base da fatura. |
 
 ## GoodWe API/SEMS: Tensão Entre Enunciado e Mentoria
 
 O enunciado pede pesquisar a API GoodWe/SEMS e quais dados ela expõe sobre carregador, como status, potência, energia entregue e eventos de sessão. Porém, a mentoria esclareceu que a API dos carregadores ainda não será liberada para os alunos.
 
+Além disso, uma validação visual do **SEMS Portal web** em 20/06/2026 mostrou uma tela de planta com foco em energia fotovoltaica, bateria, geração, renda, estatísticas energéticas, relatórios por inversor/indicador e telas de gerenciamento. Nessa navegação, **não foi observada uma tela web explícita com sessões de carregador, RFID ou usuário**.
+
 Essa diferença deve aparecer claramente no projeto:
 
 | Camada | Decisão |
 | --- | --- |
-| Sprint 1 | Documentar a API como possibilidade prevista pelo enunciado, mas registrar que ela não está disponível para implementação acadêmica nesta etapa. |
-| Sprint 2 MVP | Implementar importação de relatórios exportados do Sense Plus ou arquivos simulados no mesmo formato. |
-| Sprint 2 evolução | Criar uma interface de integração com adaptadores: `arquivo`, `sense_plus_export`, `goodwe_api_futura` e `modbus_validado`. |
+| Sprint 1 | Documentar a API como possibilidade prevista pelo enunciado, registrar que ela não está disponível e registrar que o SEMS web observado não confirmou sessões do carregador. |
+| Sprint 2 MVP | Implementar importação de dados SEMS de planta e dataset simulado de sessões; integrar sessões reais apenas quando houver exportação confirmada. |
+| Sprint 2 evolução | Criar uma interface de integração com adaptadores: `sems_energia_planta`, `arquivo_sessoes`, `sense_plus_app_export`, `goodwe_api_futura` e `modbus_validado`. |
 | Produto futuro | Caso a GoodWe libere documentação e credenciais, substituir parte da importação manual por coleta automatizada. |
 
-Campos esperados para o modelo de dados, independentemente da fonte:
+Campos esperados para o modelo de sessões de recarga, quando a fonte real estiver disponível:
 
 - identificador da sessão;
 - data/hora de início;
@@ -136,6 +139,20 @@ Campos esperados para o modelo de dados, independentemente da fonte:
 - RFID ou identificador de usuário;
 - carregador;
 - falhas ou eventos.
+
+Campos já observados no SEMS web para contexto energético da planta:
+
+- nome da planta;
+- classificação da planta;
+- capacidade FV;
+- capacidade de bateria;
+- potência FV instantânea;
+- geração diária;
+- geração total;
+- renda diária;
+- renda total;
+- curvas de `PV(W)`, `Battery(W)`, `Grid(W)`, `Load(W)`, `Genset Power(W)` e `Micro-grid Power(W)`;
+- estatísticas de `AC Output` e `Load Consumption`.
 
 ## Opção de Aprofundamento Escolhida: APIs Complementares
 
@@ -158,13 +175,14 @@ Essas APIs não são enfeite. Elas ajudam a transformar o EV ChargeOps em uma pl
 - **ANEEL Open Data** aproxima o cálculo de custo do setor elétrico real, em vez de usar uma tarifa fictícia fixa para sempre.
 - **IBGE Localidades** evita cadastros bagunçados e permite segmentar expansão por cidade, UF e região.
 
-Para a Sprint 2, a prioridade ainda é importar sessões e calcular rateio. As APIs complementares entram como camada de inteligência e expansão, não como requisito mínimo para o primeiro protótipo.
+Para a Sprint 2, a prioridade ainda é preparar a importação de sessões, validar a fonte real disponível e calcular rateio com dataset simulado ou relatório confirmado. As APIs complementares entram como camada de inteligência e expansão, não como requisito mínimo para o primeiro protótipo.
 
 ## Riscos Técnicos e Mitigações
 
 | Risco | Por que importa | Mitigação proposta |
 | --- | --- | --- |
-| API GoodWe indisponível | Pode impedir automação completa da coleta. | MVP baseado em importação de CSV, Excel, PDF ou dados simulados no layout do Sense Plus. |
+| API GoodWe indisponível | Pode impedir automação completa da coleta. | MVP baseado em importação de dados SEMS disponíveis e dados simulados para sessões. |
+| SEMS web não mostrar sessões do carregador | Pode inviabilizar rateio real se a equipe assumir campos que não existem no acesso web. | Tratar sessões como fonte a confirmar via app, exportação específica ou liberação GoodWe/FIAP. |
 | Relatório exportado variar por plataforma | App e web podem oferecer formatos diferentes. | Criar importador tolerante a nomes de colunas e manter dicionário de campos. |
 | Ausência de OCPP | Reduz interoperabilidade com plataformas comerciais de cobrança. | Arquitetura com adaptadores e registro explícito de fonte de dados. |
 | Limite de 10 RFID | Pode não atender condomínios grandes. | Mapear RFID para usuário/unidade e estudar camada externa de autenticação na evolução. |
@@ -175,7 +193,7 @@ Para a Sprint 2, a prioridade ainda é importar sessões e calcular rateio. As A
 
 A Frente 2 recomenda a seguinte decisão:
 
-> O EV ChargeOps deve nascer como uma plataforma de importação, normalização e auditoria de sessões do Sense Plus, com arquitetura preparada para API futura, e não como um sistema que depende de uma API ainda indisponível.
+> O EV ChargeOps deve nascer como uma plataforma de importação, normalização e auditoria preparada para duas classes de dados: dados energéticos agregados do SEMS e sessões de recarga quando a exportação real for confirmada. A solução não deve depender de API indisponível nem assumir que o SEMS web já fornece sessões por RFID.
 
 Essa decisão torna o projeto mais executável, mais honesto e mais competitivo.
 

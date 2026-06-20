@@ -38,15 +38,21 @@ O objetivo desta sprint é pesquisar, documentar e propor a base da solução **
 
 O EV ChargeOps é proposto como uma camada de gestão para recarga compartilhada em condomínios, edifícios corporativos e campus universitários.
 
-No cenário real da FIAP/GoodWe, o carregador usado como referência é o **GoodWe GW7K HC20**, linha **HCA G2**, de **7 kW em corrente alternada**, monitorado pela plataforma **Sense Plus**. A mentoria técnica esclareceu pontos decisivos:
+No cenário real da FIAP/GoodWe, o carregador usado como referência é o **GoodWe GW7K HC20**, linha **HCA G2**, de **7 kW em corrente alternada**, monitorado pelo ecossistema **SEMS/Sense Plus**. A mentoria técnica esclareceu pontos decisivos:
 
 - a API para carregadores ainda está em desenvolvimento e não será liberada aos alunos nesta etapa;
 - o carregador usa **Modbus**, não OCPP;
-- o Sense Plus é a principal fonte prática para visualizar histórico, potência, energia, status e relatórios;
+- o Sense Plus/SEMS é a principal fonte prática para visualizar dados da planta, potência, energia, status e relatórios;
 - não há cobrança automática integrada;
 - o carregador suporta até 10 cartões RFID, o que cria limite de escala para condomínios maiores.
 
-Por isso, a proposta não depende de uma API indisponível. O MVP da Sprint 2 deve importar relatórios do Sense Plus ou arquivos simulados no mesmo formato, normalizar sessões, associar RFID a usuários/unidades, calcular rateio e gerar alertas operacionais.
+Uma validação visual feita no SEMS Portal em 20/06/2026 mostrou que o acesso web disponível exibe principalmente dados agregados de planta fotovoltaica/bateria, gráficos de potência, geração, renda, estatísticas energéticas e relatórios por inversor/indicador. Nessa inspeção, **não foi observada uma tela web explícita de sessões do carregador por usuário/RFID**.
+
+Por isso, a proposta não depende de uma API indisponível nem promete que o SEMS web, sozinho, entrega todos os campos de rateio. O MVP da Sprint 2 deve ter adaptadores separados para:
+
+- dados energéticos agregados da planta no SEMS;
+- relatórios reais de sessão do carregador, quando forem disponibilizados pelo app, por exportação específica ou pela GoodWe/FIAP;
+- dataset simulado de sessões para implementar e testar rateio, IA e auditoria enquanto a exportação real não for confirmada.
 
 ## Problema
 
@@ -87,6 +93,8 @@ Artefatos:
 
 Arquivo completo: `docs/pesquisa/base-regulatoria-tecnica.md`
 
+Validação complementar: `docs/pesquisa/validacao-sems-portal.md`
+
 A Frente 2 documenta:
 
 - recorte da Resolução Normativa ANEEL nº 1.000/2021 indicado pelo enunciado;
@@ -109,7 +117,7 @@ APIs mapeadas:
 
 Decisão técnica desta frente:
 
-> O MVP deve usar importação de relatórios do Sense Plus e manter adaptadores preparados para API GoodWe futura, Modbus validado ou outras fontes.
+> O MVP deve usar importação de dados disponíveis do SEMS/Sense Plus sem assumir que a versão web já entrega sessões de carregador/RFID. O sistema deve manter adaptadores para dados agregados da planta, relatórios reais de sessão quando confirmados, API GoodWe futura, Modbus validado ou outras fontes.
 
 ## Frente 3 - Arquitetura e IA
 
@@ -120,7 +128,7 @@ A Frente 3 define a solução em quatro camadas:
 | Camada | Função |
 | --- | --- |
 | Física | Carregador GoodWe, veículo, RFID, rede elétrica e smart meter futuro. |
-| Conectividade | Sense Plus, Solar Go, Wi-Fi, LAN, Modbus e exportação de relatórios. |
+| Conectividade | SEMS/Sense Plus, Solar Go, Wi-Fi, LAN, Modbus e exportação de relatórios quando disponível. |
 | Aplicação | Importador, banco de dados, motor de rateio, IA e auditoria. |
 | Apresentação | Painel do gestor, fatura do usuário, alertas e recomendações. |
 
@@ -134,12 +142,13 @@ A Frente 3 define a solução em quatro camadas:
 
 1. Usuário conecta o veículo e inicia a recarga.
 2. Carregador GoodWe registra energia, duração, potência, status e eventos.
-3. Sense Plus exibe o histórico e, conforme acesso disponível, permite exportação de relatórios.
-4. EV ChargeOps importa o relatório.
-5. O sistema normaliza campos, associa RFID a usuário/unidade e valida inconsistências.
-6. Regras e IA sinalizam sessões suspeitas.
-7. Motor de rateio calcula consumo individual, custos comuns, ociosidade e ajustes.
-8. Gestor recebe painel mensal e usuário recebe fatura explicada.
+3. SEMS/Sense Plus exibe dados da planta e, conforme acesso disponível, permite relatórios energéticos.
+4. Relatórios específicos de sessão do carregador ainda precisam ser confirmados no app, em exportação dedicada ou em liberação GoodWe/FIAP.
+5. EV ChargeOps importa o relatório disponível ou dataset simulado compatível.
+6. O sistema normaliza campos, associa RFID a usuário/unidade quando esse dado existir e valida inconsistências.
+7. Regras e IA sinalizam sessões suspeitas ou lacunas de dados.
+8. Motor de rateio calcula consumo individual, custos comuns, ociosidade e ajustes quando houver base de sessão validada.
+9. Gestor recebe painel mensal e usuário recebe fatura explicada.
 
 ## Modelo de Rateio
 
@@ -225,7 +234,7 @@ Esses arquivos não representam dados reais da FIAP. Eles servem para desenvolve
 | Ordem | Entrega | Tecnologias sugeridas | Resultado esperado |
 | --- | --- | --- | --- |
 | 1 | Modelagem do domínio | Python, Pydantic ou dataclasses, SQLite/PostgreSQL | Entidades e relacionamentos implementados. |
-| 2 | Importador de relatórios | Python, pandas, openpyxl, leitura CSV inicial | Sessões carregadas e validadas. |
+| 2 | Importador de relatórios | Python, pandas, openpyxl, leitura CSV inicial | Dados SEMS de planta e sessões simuladas carregados; sessões reais integradas quando a exportação for confirmada. |
 | 3 | Motor de rateio | Python, pytest | Faturas calculadas com testes de exceção. |
 | 4 | Painel mínimo | Streamlit ou FastAPI + front-end simples | Gestor visualiza sessões, rateio e alertas. |
 | 5 | IA operacional | scikit-learn, pandas | Previsão, anomalia e perfis demonstráveis. |
@@ -258,6 +267,7 @@ enterprise-challenge-goodwe/
       arquitetura-ia.md
       base-regulatoria-tecnica.md
       contexto-problema.md
+      validacao-sems-portal.md
     revisao-senior-topico-1.md
   references/
     fontes.md
@@ -272,6 +282,7 @@ Principais bases consultadas:
 
 - enunciado oficial local da FIAP;
 - transcript local da mentoria GoodWe/FIAP;
+- validação visual do SEMS Portal em 20/06/2026;
 - ABVE;
 - Open Charge Alliance;
 - Open Charge Map;

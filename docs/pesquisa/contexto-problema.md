@@ -16,9 +16,9 @@ Esse problema ficou mais relevante porque a eletromobilidade deixou de ser um as
 
 A mentoria de alinhamento deixou o problema mais concreto. O projeto não deve imaginar um carregador genérico com uma API pronta, pagamento automático e integração livre com qualquer sistema. O cenário real parte do carregador instalado na FIAP, modelo **GW7K HC20**, da linha **HCA G2**, com potência nominal de **7 kW em corrente alternada (CA)**.
 
-Esse carregador é monitorado pela plataforma **Sense Plus**, que permite visualizar histórico, energia, potência, status, modo de operação e registros de carga. A call também esclareceu uma restrição importante: **não haverá API pública liberada para os alunos nesta etapa**. Portanto, o caminho mais realista para a Sprint 1 é trabalhar com dados exportados ou consultados no Sense Plus, especialmente relatórios em PDF, CSV ou Excel, quando disponíveis.
+Esse carregador é monitorado pelo ecossistema **SEMS/Sense Plus**, que permite visualizar energia, potência, status, modo de operação e relatórios conforme o acesso. A call também esclareceu uma restrição importante: **não haverá API pública liberada para os alunos nesta etapa**. Portanto, o caminho mais realista para a Sprint 1 é trabalhar com dados exportados ou consultados no SEMS/Sense Plus, mas sem assumir que a versão web já entregue sessões do carregador por usuário/RFID.
 
-Outro ponto relevante é que o carregador usa **Modbus**, não OCPP. Isso muda a forma de pensar a solução: não dá para assumir, nesta sprint, uma integração pronta com plataformas abertas de cobrança ou operação de eletropostos. O MVP precisa nascer respeitando essa limitação, usando os relatórios do Sense Plus como fonte de dados e propondo uma camada própria de organização, rateio e análise.
+Outro ponto relevante é que o carregador usa **Modbus**, não OCPP. Isso muda a forma de pensar a solução: não dá para assumir, nesta sprint, uma integração pronta com plataformas abertas de cobrança ou operação de eletropostos. O MVP precisa nascer respeitando essa limitação, usando dados disponíveis do SEMS/Sense Plus e sessões reais somente quando confirmadas, além de propor uma camada própria de organização, rateio e análise.
 
 Em resumo, o problema da equipe não é "criar um app bonito para carregar carro". O problema é pegar os dados reais disponíveis na operação GoodWe/FIAP e transformá-los em:
 
@@ -124,13 +124,13 @@ Os dados de uma sessão podem ser capturados por diferentes caminhos. A escolha 
 | Aplicativo do usuário | Identidade, início da sessão, fim da sessão e aceite das regras. | Associar a recarga a uma pessoa ou unidade. |
 | RFID, aplicativo ou carregamento automático | Identificação do usuário ou liberação da sessão no ponto de recarga. | Liberar o carregador apenas para usuários autorizados e registrar quem usou. |
 | Medidor interno do carregador | Energia entregue em kWh, potência, duração e status. | Calcular consumo individual e alimentar o rateio. |
-| Sense Plus | Histórico de cargas, energia, potência, status e relatórios exportáveis. | Importar CSV, Excel ou PDF para calcular consumo, rateio e indicadores. |
+| SEMS/Sense Plus | Dados de planta, energia, potência, status e relatórios conforme o acesso disponível. | Importar dados energéticos agregados e, somente quando confirmado, relatórios de sessão para calcular consumo, rateio e indicadores. |
 | API do fabricante | Dados de status, eventos, potência, energia e histórico. | No caso GoodWe/FIAP, foi tratada como possibilidade futura, mas não disponível para esta sprint. |
 | Protocolo aberto, como OCPP | Comunicação entre carregador e sistema central de gestão. | Serve como referência de mercado, mas a mentoria indicou que o HCA G2 usa Modbus e não OCPP. |
 | Modbus | Comunicação técnica com equipamentos, inversores, baterias ou medidores compatíveis. | Mapear possibilidades futuras de integração técnica sem assumir cobrança pronta. |
 | Registro manual validado | Correções ou justificativas feitas pelo gestor em casos excepcionais. | Tratar sessão interrompida, erro de leitura ou contestação de cobrança. |
 
-Para esta sprint, o ponto principal é documentar quais dados são necessários e como eles podem sair do Sense Plus. Na Sprint 02, a equipe poderá criar um importador de CSV/Excel/PDF, simular arquivos com a mesma estrutura dos relatórios ou, se a GoodWe liberar acesso técnico adicional, evoluir para integração mais automatizada.
+Para esta sprint, o ponto principal é documentar quais dados são necessários e separar o que já foi observado no SEMS web do que ainda precisa ser confirmado no app ou em relatório específico do carregador. Na Sprint 02, a equipe poderá criar um importador para dados SEMS de planta, simular arquivos de sessões no formato esperado e, se a GoodWe liberar exportação técnica adicional, evoluir para integração mais automatizada.
 
 ## Modelos de Negócio para Recarga Compartilhada
 
@@ -163,7 +163,7 @@ O benchmark abaixo foi feito a partir das páginas públicas das empresas consul
 | NeoCharge - Plataforma de Gestão | Ajuda gestores a controlar estações compartilhadas, cobranças, disponibilidade, usuários e histórico de recargas. | Cobranças por recarga, disponibilidade por estação, energia utilizada, histórico completo, curva de potência, informações de usuário, monitoramento remoto, controle de acesso e avisos de falha. | Venda de equipamentos, implantação, operação, plataforma digital e serviços de gestão para condomínios, empresas e eletropostos. | A proposta é ampla, mas não deixa claro, em página pública, um modelo de IA para previsão, anomalias ou recomendação automática de rateio. |
 | Zaptec Pro | Resolve o problema de escalar muitos carregadores em apartamentos, estacionamentos e ambientes comerciais sem sobrecarregar a infraestrutura elétrica. | Balanceamento dinâmico de carga e fases, portal de gestão, controle de usuários, relatórios de carga, status em tempo real, conectividade e medição por sessão. | Venda de hardware e ecossistema de gestão para instalações compartilhadas e comerciais. | É forte em infraestrutura e gestão técnica, mas não é apresentado como solução brasileira de rateio condominial nem como plataforma focada em cobrança local. |
 | Wallbox Pulsar Plus | Atende recargas residenciais e multifamiliares com carregador compacto, aplicativo e recursos de gerenciamento de energia. | Agendamento de sessões, monitoramento de energia, Wi-Fi, Bluetooth, identificação por aplicativo, gerenciamento dinâmico de carga e integração com energia solar. | Venda de carregador, acessórios e software de energia para usuários residenciais, multifamiliares e parceiros. | O foco principal é carregamento e energia, não uma operação completa de rateio para condomínios brasileiros com múltiplos usuários e auditoria mensal. |
-| GoodWe HCA G2 + Sense Plus | É a base real do desafio, permitindo monitorar o carregador instalado na FIAP e consultar registros de carga. | Visualização de potência, energia, status, modos de operação, histórico de cargas, relatórios e exportação por aplicativo ou plataforma, conforme acesso disponível. | Venda de hardware e ecossistema de monitoramento GoodWe; nesta sprint, uso acadêmico com conta de instalador e dados da planta FIAP. | Não há API pública liberada para os alunos nesta etapa, não há cobrança automática integrada, não há OCPP no HCA G2 e o limite nativo de RFID é de até 10 cartões. |
+| GoodWe HCA G2 + Sense Plus | É a base real do desafio, permitindo monitorar a planta FIAP e, conforme acesso, consultar dados relacionados ao carregador instalado. | Visualização de potência, energia, status, modos de operação, dados da planta, relatórios e exportação por aplicativo ou plataforma, conforme acesso disponível. | Venda de hardware e ecossistema de monitoramento GoodWe; nesta sprint, uso acadêmico com conta de instalador e dados da planta FIAP. | Não há API pública liberada para os alunos nesta etapa, não há cobrança automática integrada, não há OCPP no HCA G2, o limite nativo de RFID é de até 10 cartões e o SEMS web observado não confirmou sessões do carregador. |
 
 ### O que o EV ChargeOps Aprende com o Mercado
 
@@ -206,19 +206,20 @@ A conclusão desta frente é que o EV ChargeOps deve priorizar:
 
 ## Recorte de MVP Recomendado
 
-Com base no enunciado e na mentoria, o MVP mais forte para este grupo é o **modelo de rateio e cobrança a partir dos relatórios do Sense Plus**, com uma camada de inteligência para identificar padrões de uso e possíveis problemas.
+Com base no enunciado, na mentoria e na validação visual do SEMS Portal, o MVP mais forte para este grupo continua sendo o **modelo de rateio e cobrança a partir de dados de sessão**, com uma camada de inteligência para identificar padrões de uso e possíveis problemas. Porém, essa base de sessão precisa ser confirmada em exportação específica do carregador, no app Sense Plus ou por liberação GoodWe/FIAP.
 
 Esse foco é melhor do que tentar começar por controle dinâmico de demanda, porque o controle de demanda depende mais de medidor inteligente, configuração elétrica e validação técnica do carregador. Já o rateio pode ser demonstrado com dados de sessão, mesmo que a integração inicial seja por arquivo exportado.
 
 O MVP da Sprint 02 pode ser definido assim:
 
-1. Importar relatório de sessões do Sense Plus em CSV, Excel ou dados simulados no mesmo formato.
-2. Normalizar campos como início, fim, duração, kWh, potência, RFID, modo e status.
-3. Associar RFID ou identificador de sessão a usuário, unidade ou centro de custo.
-4. Calcular consumo individual e custo estimado por regra de rateio.
-5. Separar consumo individual de custos comuns da operação.
-6. Gerar relatório mensal para gestor e usuário.
-7. Aplicar IA ou análise estatística para detectar anomalias, horários de pico e tendência de demanda.
+1. Importar dados energéticos agregados do SEMS web para contextualizar geração, consumo, rede e bateria.
+2. Importar relatório real de sessões quando a exportação for confirmada, ou usar dataset simulado compatível enquanto isso.
+3. Normalizar campos como início, fim, duração, kWh, potência, RFID, modo e status quando existirem na fonte.
+4. Associar RFID ou identificador de sessão a usuário, unidade ou centro de custo.
+5. Calcular consumo individual e custo estimado por regra de rateio apenas com base de sessão validada.
+6. Separar consumo individual de custos comuns da operação.
+7. Gerar relatório mensal para gestor e usuário.
+8. Aplicar IA ou análise estatística para detectar anomalias, horários de pico e tendência de demanda.
 
 Assim, a solução fica conectada ao hardware real, respeita as limitações da GoodWe e entrega valor direto para o problema de condomínio, que foi o foco reforçado para a turma online.
 
@@ -231,7 +232,7 @@ Esta primeira frente orienta as próximas decisões do projeto:
 - Na Frente 3, a arquitetura deverá considerar quatro camadas: carregador, conectividade, aplicação e interface.
 - Na Frente 3, o modelo de rateio deverá partir do consumo em kWh por sessão e tratar custos adicionais de forma separada e transparente.
 - Na Frente 3, a IA deverá atuar sobre dados reais ou simulados de sessão, e não apenas aparecer como recurso decorativo.
-- Na Frente 3, a arquitetura deverá prever importação de relatórios do Sense Plus antes de prometer integração por API.
+- Na Frente 3, a arquitetura deverá prever importação de dados SEMS/Sense Plus disponíveis e relatórios de sessão quando confirmados, antes de prometer integração por API.
 
 ## Checklist de Atendimento ao Enunciado
 

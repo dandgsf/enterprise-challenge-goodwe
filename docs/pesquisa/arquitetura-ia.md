@@ -40,19 +40,21 @@ Esse posicionamento resolve a dor principal da turma online, citada na mentoria:
    - A recarga é liberada por RFID, app ou modo configurado.
    - O carregador registra energia, duração, potência, status e eventos.
 
-2. **Dados aparecem no Sense Plus**
-   - O gestor visualiza histórico, potência, energia, status e modo de operação.
-   - Quando disponível, exporta relatório em PDF, CSV ou Excel.
+2. **Dados aparecem no SEMS/Sense Plus**
+   - O gestor visualiza dados da planta, potência, energia, status e modo de operação.
+   - Na validação visual do SEMS web, foram observados dados agregados de planta, geração, renda, curvas de potência e estatísticas energéticas.
+   - Sessões do carregador por usuário/RFID ainda precisam ser confirmadas em app, relatório específico ou liberação GoodWe/FIAP.
 
 3. **EV ChargeOps importa o relatório**
    - O arquivo é carregado no sistema.
-   - O importador identifica colunas, datas, kWh, status, RFID e carregador.
+   - Para dados SEMS de planta, o importador identifica data, potência, geração, consumo, rede, bateria e indicadores energéticos.
+   - Para dados de sessão, quando disponíveis, o importador identifica colunas, datas, kWh, status, RFID e carregador.
    - O sistema guarda o arquivo original como evidência.
 
 4. **Dados são normalizados**
    - Datas viram timestamps padronizados.
    - Energia vira número em kWh.
-   - RFID é associado a usuário, unidade ou centro de custo.
+   - RFID é associado a usuário, unidade ou centro de custo quando esse campo existir na fonte.
    - Sessões duplicadas ou incompletas são sinalizadas.
 
 5. **IA e regras verificam qualidade**
@@ -63,6 +65,7 @@ Esse posicionamento resolve a dor principal da turma online, citada na mentoria:
    - O consumo individual é calculado por usuário/unidade.
    - Custos comuns são rateados conforme regra aprovada.
    - Exceções são tratadas com justificativa e trilha de auditoria.
+   - Se houver apenas dado agregado da planta, o sistema gera análise energética e não fecha rateio individual automaticamente.
 
 7. **Fatura e painel são gerados**
    - Usuário vê consumo, custo, sessões e regra aplicada.
@@ -239,7 +242,7 @@ Eles não representam dados reais da FIAP. Servem para implementar e testar o im
 | Ordem | Entrega | Tecnologias sugeridas | Critério de pronto |
 | --- | --- | --- | --- |
 | 1 | Estrutura do projeto e modelos de dados | Python, `dataclasses` ou Pydantic, SQLite/PostgreSQL | Entidades principais representadas e versionadas. |
-| 2 | Importador de relatórios | Python, pandas, openpyxl, tabula/camelot ou leitura CSV inicial | Arquivo de sessões importado e validado com dicionário de campos. |
+| 2 | Importador de relatórios | Python, pandas, openpyxl, tabula/camelot ou leitura CSV inicial | Dados SEMS de planta importados; sessões simuladas validadas; sessões reais integradas quando exportação for confirmada. |
 | 3 | Motor de rateio | Python puro, pytest | Fórmula calcula faturas e trata exceções com testes. |
 | 4 | Painel mínimo | Streamlit ou FastAPI + front-end simples | Gestor vê sessões, total por usuário, alertas e faturas. |
 | 5 | IA operacional | scikit-learn, pandas | Previsão simples, anomalia e cluster com dados simulados. |
@@ -260,9 +263,9 @@ Eles não representam dados reais da FIAP. Servem para implementar e testar o im
 
 A arquitetura recomendada para o EV ChargeOps é:
 
-> Um sistema de importação e auditoria de sessões do Sense Plus, com banco próprio, motor de rateio transparente e IA operacional aplicada a previsão, anomalia e perfis de uso.
+> Um sistema de importação e auditoria preparado para dados SEMS de planta e sessões de recarga quando confirmadas, com banco próprio, motor de rateio transparente e IA operacional aplicada a previsão, anomalia e perfis de uso.
 
-Essa arquitetura é forte porque respeita o hardware real, aceita a ausência de API pública, resolve a dor de rateio e deixa espaço para evoluir para API GoodWe, Modbus validado ou integrações OCPP em outros equipamentos.
+Essa arquitetura é forte porque respeita o hardware real, aceita a ausência de API pública, não assume que o SEMS web já entrega sessões por RFID, resolve a dor de rateio quando houver base de sessão validada e deixa espaço para evoluir para API GoodWe, Modbus validado ou integrações OCPP em outros equipamentos.
 
 ## Checklist de Atendimento ao Enunciado
 
