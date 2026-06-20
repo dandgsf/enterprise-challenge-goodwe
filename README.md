@@ -6,11 +6,13 @@ O objetivo desta sprint é pesquisar, documentar e propor a base da solução **
 
 ## Equipe
 
-**Grupo 30**
+**Equipe 01**
 
 | Integrante | RM | E-mail |
 | --- | --- | --- |
-| Danilo Gustavo da Silva Fernandes | RM570057 | danilofernandeswork@gmail.com |
+| Danilo Gustavo da Silva Fernandes | RM570057 | rm570057@fiap.com.br |
+| Renan Mano Otero | RM573615 |
+| Beatriz Marques Souza | RM571819 |
 
 ## Resumo da Solução
 
