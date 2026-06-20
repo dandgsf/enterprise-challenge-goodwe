@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="260" viewBox="0 0 1320 260" role="img" aria-labelledby="title desc">
+  <title id="title">Fluxo de uma sessão de recarga compartilhada</title>
+  <desc id="desc">Diagrama mostrando o caminho desde a chegada do usuário até histórico, relatório e alertas.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#245c5a"/>
+    </marker>
+    <style>
+      .box { fill: #f8fbfa; stroke: #245c5a; stroke-width: 2; rx: 10; }
+      .label { fill: #102927; font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: 700; }
+      .small { fill: #35504e; font-family: Arial, Helvetica, sans-serif; font-size: 12px; }
+      .line { stroke: #245c5a; stroke-width: 2.2; marker-end: url(#arrow); }
+      .title { fill: #102927; font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 700; }
+    </style>
+  </defs>
+  <rect width="1320" height="260" fill="#ffffff"/>
+  <text x="40" y="38" class="title">Fluxo simplificado de uma sessão de recarga</text>
+
+  <rect x="40" y="78" width="135" height="95" class="box"/>
+  <text x="58" y="112" class="label">Usuário chega</text>
+  <text x="58" y="136" class="small">ao ponto de</text>
+  <text x="58" y="154" class="small">recarga</text>
+
+  <line x1="175" y1="125" x2="213" y2="125" class="line"/>
+
+  <rect x="220" y="78" width="150" height="95" class="box"/>
+  <text x="238" y="106" class="label">Identificação</text>
+  <text x="238" y="130" class="small">app, RFID ou modo</text>
+  <text x="238" y="148" class="small">automático</text>
+
+  <line x1="370" y1="125" x2="408" y2="125" class="line"/>
+
+  <rect x="415" y="78" width="140" height="95" class="box"/>
+  <text x="433" y="112" class="label">Veículo</text>
+  <text x="433" y="136" class="small">conectado ao</text>
+  <text x="433" y="154" class="small">carregador</text>
+
+  <line x1="555" y1="125" x2="593" y2="125" class="line"/>
+
+  <rect x="600" y="78" width="155" height="95" class="box"/>
+  <text x="618" y="106" class="label">Sessão inicia</text>
+  <text x="618" y="130" class="small">após validação</text>
+  <text x="618" y="148" class="small">do carregador</text>
+
+  <line x1="755" y1="125" x2="793" y2="125" class="line"/>
+
+  <rect x="800" y="78" width="160" height="95" class="box"/>
+  <text x="818" y="104" class="label">Dados medidos</text>
+  <text x="818" y="128" class="small">horário, kWh,</text>
+  <text x="818" y="146" class="small">potência e status</text>
+
+  <line x1="960" y1="125" x2="998" y2="125" class="line"/>
+
+  <rect x="1005" y="78" width="125" height="95" class="box"/>
+  <text x="1023" y="112" class="label">Sessão</text>
+  <text x="1023" y="136" class="small">encerrada</text>
+
+  <line x1="1130" y1="125" x2="1168" y2="125" class="line"/>
+
+  <rect x="1175" y="78" width="115" height="95" class="box"/>
+  <text x="1193" y="104" class="label">Cálculo</text>
+  <text x="1193" y="128" class="small">custo, rateio,</text>
+  <text x="1193" y="146" class="small">relatórios</text>
+
+  <text x="40" y="218" class="small">Resultado esperado: cada sessão vira histórico auditável para cobrança, rateio, suporte e inteligência operacional.</text>
+</svg>

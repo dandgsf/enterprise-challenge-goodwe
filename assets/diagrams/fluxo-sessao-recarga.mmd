@@ -1,0 +1,8 @@
+flowchart LR
+    A[Usuário chega ao carregador] --> B[Identificação por app, RFID ou modo automático]
+    B --> C[Veículo conectado]
+    C --> D[Carregador valida e inicia a sessão]
+    D --> E[Registro de horário, kWh, potência e status]
+    E --> F[Sessão encerrada]
+    F --> G[Cálculo de custo ou rateio]
+    G --> H[Histórico, relatório e alertas]

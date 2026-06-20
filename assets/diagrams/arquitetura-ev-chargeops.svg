@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">Arquitetura proposta do EV ChargeOps</title>
+  <desc id="desc">Fluxo em quatro camadas: física, conectividade, aplicação e apresentação.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f7f8f3; }
+      .layer { fill: #ffffff; stroke: #2f3a3d; stroke-width: 1.4; }
+      .layer-title { fill: #1f2a2d; font: 700 20px Arial, sans-serif; }
+      .box { fill: #edf4f2; stroke: #52736c; stroke-width: 1.2; rx: 8; }
+      .box-alt { fill: #fff4df; stroke: #9a6a28; stroke-width: 1.2; rx: 8; }
+      .box-risk { fill: #f8e7e2; stroke: #9b5144; stroke-width: 1.2; rx: 8; }
+      .label { fill: #1f2a2d; font: 600 16px Arial, sans-serif; }
+      .small { fill: #435052; font: 13px Arial, sans-serif; }
+      .arrow { stroke: #2f3a3d; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .dash { stroke-dasharray: 7 6; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#2f3a3d"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1280" height="760"/>
+  <text x="54" y="50" fill="#182326" font-family="Arial, sans-serif" font-size="30" font-weight="700">EV ChargeOps - arquitetura proposta</text>
+  <text x="54" y="80" fill="#526064" font-family="Arial, sans-serif" font-size="15">MVP orientado a relatórios do Sense Plus, com adaptadores para API futura e integração técnica validada.</text>
+
+  <rect class="layer" x="44" y="115" width="270" height="575" rx="12"/>
+  <text class="layer-title" x="68" y="150">1. Fisica</text>
+
+  <rect class="box" x="68" y="180" width="220" height="72"/>
+  <text class="label" x="88" y="210">Veículo elétrico</text>
+  <text class="small" x="88" y="232">conectado ao carregador</text>
+
+  <rect class="box-alt" x="68" y="285" width="220" height="92"/>
+  <text class="label" x="88" y="318">GoodWe GW7K HC20</text>
+  <text class="small" x="88" y="342">HCA G2 - 7 kW CA</text>
+  <text class="small" x="88" y="362">base real FIAP</text>
+
+  <rect class="box-risk" x="68" y="410" width="220" height="82"/>
+  <text class="label" x="88" y="442">RFID</text>
+  <text class="small" x="88" y="464">até 10 cartões nativos</text>
+
+  <rect class="box" x="68" y="525" width="220" height="92"/>
+  <text class="label" x="88" y="556">Smart meter T6</text>
+  <text class="small" x="88" y="580">controle dinâmico futuro</text>
+  <text class="small" x="88" y="600">limite de corrente</text>
+
+  <rect class="layer" x="354" y="115" width="270" height="575" rx="12"/>
+  <text class="layer-title" x="378" y="150">2. Conectividade</text>
+
+  <rect class="box-alt" x="378" y="185" width="220" height="86"/>
+  <text class="label" x="398" y="218">Sense Plus</text>
+  <text class="small" x="398" y="242">web/app monitoramento</text>
+
+  <rect class="box" x="378" y="305" width="220" height="80"/>
+  <text class="label" x="398" y="338">Relatorios</text>
+  <text class="small" x="398" y="360">CSV, Excel ou PDF</text>
+
+  <rect class="box" x="378" y="420" width="220" height="80"/>
+  <text class="label" x="398" y="452">Solar Go</text>
+  <text class="small" x="398" y="474">comissionamento local</text>
+
+  <rect class="box-risk" x="378" y="535" width="220" height="80"/>
+  <text class="label" x="398" y="568">Modbus RS-485</text>
+  <text class="small" x="398" y="590">integração futura validada</text>
+
+  <rect class="layer" x="664" y="115" width="315" height="575" rx="12"/>
+  <text class="layer-title" x="688" y="150">3. Aplicacao</text>
+
+  <rect class="box" x="688" y="178" width="250" height="74"/>
+  <text class="label" x="708" y="210">Importador</text>
+  <text class="small" x="708" y="232">normaliza sessões e campos</text>
+
+  <rect class="box" x="688" y="282" width="250" height="82"/>
+  <text class="label" x="708" y="315">Banco EV ChargeOps</text>
+  <text class="small" x="708" y="339">usuários, sessões e faturas</text>
+
+  <rect class="box-alt" x="688" y="394" width="250" height="82"/>
+  <text class="label" x="708" y="426">Motor de rateio</text>
+  <text class="small" x="708" y="450">kWh + custo comum + exceções</text>
+
+  <rect class="box-alt" x="688" y="506" width="250" height="82"/>
+  <text class="label" x="708" y="538">IA operacional</text>
+  <text class="small" x="708" y="562">previsão, anomalia e perfis</text>
+
+  <rect class="box-risk" x="688" y="616" width="250" height="52"/>
+  <text class="label" x="708" y="648">Auditoria</text>
+
+  <rect class="layer" x="1019" y="115" width="217" height="575" rx="12"/>
+  <text class="layer-title" x="1043" y="150">4. Apresentacao</text>
+
+  <rect class="box" x="1043" y="205" width="168" height="86"/>
+  <text class="label" x="1063" y="238">Gestor</text>
+  <text class="small" x="1063" y="262">painel mensal</text>
+
+  <rect class="box" x="1043" y="335" width="168" height="86"/>
+  <text class="label" x="1063" y="368">Usuario</text>
+  <text class="small" x="1063" y="392">fatura explicada</text>
+
+  <rect class="box-alt" x="1043" y="465" width="168" height="86"/>
+  <text class="label" x="1063" y="498">Alertas</text>
+  <text class="small" x="1063" y="522">decisao e revisao</text>
+
+  <path class="arrow" d="M288 326 H378"/>
+  <path class="arrow" d="M598 228 H688"/>
+  <path class="arrow" d="M488 271 V305"/>
+  <path class="arrow" d="M598 345 H688"/>
+  <path class="arrow" d="M813 252 V282"/>
+  <path class="arrow" d="M813 364 V394"/>
+  <path class="arrow" d="M813 476 V506"/>
+  <path class="arrow" d="M813 588 V616"/>
+  <path class="arrow" d="M938 435 H1043"/>
+  <path class="arrow" d="M938 642 C988 642 985 248 1043 248"/>
+  <path class="arrow" d="M938 547 H1043"/>
+  <path class="arrow dash" d="M288 571 C330 571 336 575 378 575"/>
+  <path class="arrow dash" d="M288 451 C330 451 336 460 378 460"/>
+  <path class="arrow dash" d="M598 575 C638 575 648 548 688 548"/>
+
+  <text x="54" y="724" fill="#526064" font-family="Arial, sans-serif" font-size="13">Nota: a API GoodWe para carregadores foi tratada como evolução futura, pois a mentoria informou que ela não será liberada aos alunos nesta etapa.</text>
+</svg>
