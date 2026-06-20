@@ -2,13 +2,13 @@
 
 ## Objetivo desta Frente
 
-Esta frente explica, em linguagem clara, o problema que o EV ChargeOps precisa resolver. O nome EV ChargeOps aparece no enunciado do desafio como a solução proposta para transformar sessões de recarga de veículos elétricos em dados estruturados, rateio justo e inteligência acionável.
+Esta frente explica, em linguagem clara, o problema que o EV ChargeOps precisa resolver. O nome EV ChargeOps aparece no enunciado do desafio como a solução proposta para transformar sessões de recarga de veículos elétricos e dados energéticos do local em governança, rateio justo e inteligência acionável.
 
 Na prática, o problema é simples de entender: quando um condomínio, uma empresa ou uma faculdade instala um carregador compartilhado, várias pessoas passam a usar o mesmo equipamento. Isso ajuda a reduzir custos de instalação e amplia o acesso à recarga, mas cria uma pergunta operacional importante:
 
-> Como saber quem usou o carregador, quanto consumiu, quanto deve pagar e se a infraestrutura está sendo usada de forma justa?
+> Como saber quem usou o carregador, quanto consumiu, quanto deve pagar e quais decisões podem reduzir o gasto energético do local?
 
-Sem registro organizado, a recarga compartilhada pode virar uma fonte de conflito. O gestor pode não saber quanto cada usuário consumiu, o morador pode não confiar no valor cobrado e o condomínio pode ter dificuldade para identificar horários de pico, ociosidade, falhas ou uso abusivo.
+Sem registro organizado, a recarga compartilhada pode virar uma fonte de conflito e desperdício. O gestor pode não saber quanto cada usuário consumiu, o morador pode não confiar no valor cobrado e o condomínio pode ter dificuldade para identificar horários de pico, ociosidade, falhas, uso abusivo ou oportunidades de economia, como deslocar recargas para horários melhores, aproveitar geração solar ou estudar expansão fotovoltaica.
 
 Esse problema ficou mais relevante porque a eletromobilidade deixou de ser um assunto distante. Segundo dados divulgados pela ABVE em junho de 2026, o Brasil emplacou 44.981 veículos leves eletrificados em maio de 2026, e esse grupo chegou a 17% de participação nas vendas domésticas de automóveis e comerciais leves no mês. Ou seja, quanto mais veículos eletrificados entram em circulação, maior tende a ser a pressão por recarga em condomínios, empresas e estacionamentos compartilhados.
 
@@ -27,7 +27,9 @@ Em resumo, o problema da equipe não é "criar um app bonito para carregar carro
 - base para cobrança ou rateio;
 - leitura de falhas e sessões interrompidas;
 - relatório compreensível para gestor e usuário;
-- recomendações para operação e expansão da infraestrutura.
+- recomendações para operação, economia de energia e expansão da infraestrutura.
+
+Com a validação do SEMS Portal, essa proposta ficou mais interessante: os dados agregados de planta não bastam para cobrar um usuário individual, mas servem muito bem para analisar geração, consumo, rede, bateria, picos e oportunidades de economia local. Portanto, a solução deve juntar duas visões: **quem usou a recarga** e **como o local pode gastar menos energia para operar essa recarga**.
 
 ## O que é Recarga Compartilhada
 
@@ -61,8 +63,9 @@ O desafio da GoodWe não é apenas colocar energia no carro. O desafio é transf
 | Escalar identificação | Atender mais usuários do que o limite nativo de cartões RFID. | Condomínios maiores podem ficar presos a um controle manual ou insuficiente. |
 | Operar sem API pública | Usar relatórios exportados em vez de integração direta. | O MVP precisa tratar importação de arquivos e não depender de automação idealizada. |
 | Evitar sobrecarga elétrica | Entender horários e limites de demanda. | Múltiplas recargas podem pressionar disjuntores, rede interna ou demanda contratada. |
+| Reduzir gasto energético | Sugerir horários, regras de uso e estudos de geração solar. | O local pode pagar mais caro por carregar em horários ruins ou deixar de aproveitar energia própria. |
 
-Esses desafios mostram que a solução precisa funcionar como uma camada de operação. O carregador entrega energia, mas a plataforma precisa entregar clareza.
+Esses desafios mostram que a solução precisa funcionar como uma camada de governança. O carregador entrega energia, mas a plataforma precisa entregar clareza, prestação de contas e recomendações para gastar melhor.
 
 ## Como Funciona uma Sessão de Recarga
 
@@ -83,6 +86,8 @@ Fluxo simplificado:
 O ponto mais importante é: **cada recarga gera dados que podem virar cobrança, auditoria e decisão de gestão**.
 
 No caso GoodWe/FIAP, a sessão também precisa considerar os modos e limitações do carregador. A mentoria citou modos como carga rápida, prioridade solar, prioridade bateria + solar e combinação foto-bateria. Isso importa porque duas sessões com o mesmo tempo de duração podem ter consumos e custos diferentes dependendo da potência entregue, da origem da energia e da configuração ativa.
+
+Sobre identificação do usuário, a conclusão precisa ser cuidadosa. O carregador permite autorização por RFID e também pode iniciar pelo app ou em modo automático. O RFID ajuda a identificar qual cartão autorizou a carga, mas só vira base de cobrança se esse dado aparecer no relatório/app ou for conciliado internamente. O start pelo app pode indicar o operador que iniciou a carga, desde que o acesso esteja individualizado. Já o modo automático não identifica a pessoa sozinho; nesse caso, o EV ChargeOps precisa de uma regra externa, como reserva, QR Code, cadastro manual ou conferência do gestor.
 
 ![Fluxo de uma sessão de recarga](../../assets/diagrams/fluxo-sessao-recarga.svg)
 
@@ -124,7 +129,7 @@ Os dados de uma sessão podem ser capturados por diferentes caminhos. A escolha 
 | Aplicativo do usuário | Identidade, início da sessão, fim da sessão e aceite das regras. | Associar a recarga a uma pessoa ou unidade. |
 | RFID, aplicativo ou carregamento automático | Identificação do usuário ou liberação da sessão no ponto de recarga. | Liberar o carregador apenas para usuários autorizados e registrar quem usou. |
 | Medidor interno do carregador | Energia entregue em kWh, potência, duração e status. | Calcular consumo individual e alimentar o rateio. |
-| SEMS/Sense Plus | Dados de planta, energia, potência, status e relatórios conforme o acesso disponível. | Importar dados energéticos agregados e, somente quando confirmado, relatórios de sessão para calcular consumo, rateio e indicadores. |
+| SEMS/Sense Plus | Dados de planta, energia, potência, status e relatórios conforme o acesso disponível. | Importar dados energéticos agregados para recomendações de economia e, somente quando confirmado, relatórios de sessão para calcular consumo, rateio e indicadores. |
 | API do fabricante | Dados de status, eventos, potência, energia e histórico. | No caso GoodWe/FIAP, foi tratada como possibilidade futura, mas não disponível para esta sprint. |
 | Protocolo aberto, como OCPP | Comunicação entre carregador e sistema central de gestão. | Serve como referência de mercado, mas a mentoria indicou que o HCA G2 usa Modbus e não OCPP. |
 | Modbus | Comunicação técnica com equipamentos, inversores, baterias ou medidores compatíveis. | Mapear possibilidades futuras de integração técnica sem assumir cobrança pronta. |
@@ -144,7 +149,7 @@ O enunciado pede a análise de modelos de negócio usados no Brasil e no mundo. 
 | Assinatura mensal | O usuário paga uma mensalidade para ter acesso ao serviço. | Facilita previsibilidade de receita e pode funcionar para usuários frequentes. | Pode ser ruim para usuários ocasionais e não reflete necessariamente o consumo real. |
 | Rateio condominial | O custo total é dividido entre usuários, unidades ou moradores conforme uma regra definida. | Adapta-se bem a condomínios e permite regras internas de governança. | Se a regra não considerar consumo individual, pode parecer injusta. |
 
-Para o EV ChargeOps, o modelo mais coerente é combinar **cobrança por kWh** com **regras de rateio condominial**. Isso permite que cada usuário pague pelo consumo real, enquanto custos comuns, como manutenção, conectividade ou taxa administrativa, podem ser distribuídos por uma regra transparente.
+Para o EV ChargeOps, o modelo mais coerente é combinar **cobrança por kWh** com **regras de rateio condominial** e **recomendações de economia energética**. Isso permite que cada usuário pague pelo consumo real, enquanto custos comuns, como manutenção, conectividade ou taxa administrativa, podem ser distribuídos por uma regra transparente. Ao mesmo tempo, o gestor recebe sugestões para reduzir o custo total que será rateado.
 
 A mentoria reforçou que o carregador atual não oferece cobrança automática integrada. Isso transforma o rateio em parte central do projeto, não em detalhe financeiro. A solução precisa calcular valores a partir do relatório da sessão, explicar a regra aplicada e deixar claro quando um custo é consumo individual e quando é custo comum da operação.
 
@@ -160,55 +165,56 @@ O benchmark abaixo foi feito a partir das páginas públicas das empresas consul
 
 | Solução | Problema que resolve | Funcionalidades principais | Modelo de negócio provável | Limitações observadas |
 | --- | --- | --- | --- | --- |
-| NeoCharge - Plataforma de Gestão | Ajuda gestores a controlar estações compartilhadas, cobranças, disponibilidade, usuários e histórico de recargas. | Cobranças por recarga, disponibilidade por estação, energia utilizada, histórico completo, curva de potência, informações de usuário, monitoramento remoto, controle de acesso e avisos de falha. | Venda de equipamentos, implantação, operação, plataforma digital e serviços de gestão para condomínios, empresas e eletropostos. | A proposta é ampla, mas não deixa claro, em página pública, um modelo de IA para previsão, anomalias ou recomendação automática de rateio. |
-| Zaptec Pro | Resolve o problema de escalar muitos carregadores em apartamentos, estacionamentos e ambientes comerciais sem sobrecarregar a infraestrutura elétrica. | Balanceamento dinâmico de carga e fases, portal de gestão, controle de usuários, relatórios de carga, status em tempo real, conectividade e medição por sessão. | Venda de hardware e ecossistema de gestão para instalações compartilhadas e comerciais. | É forte em infraestrutura e gestão técnica, mas não é apresentado como solução brasileira de rateio condominial nem como plataforma focada em cobrança local. |
-| Wallbox Pulsar Plus | Atende recargas residenciais e multifamiliares com carregador compacto, aplicativo e recursos de gerenciamento de energia. | Agendamento de sessões, monitoramento de energia, Wi-Fi, Bluetooth, identificação por aplicativo, gerenciamento dinâmico de carga e integração com energia solar. | Venda de carregador, acessórios e software de energia para usuários residenciais, multifamiliares e parceiros. | O foco principal é carregamento e energia, não uma operação completa de rateio para condomínios brasileiros com múltiplos usuários e auditoria mensal. |
+| NeoCharge - Plataforma de Gestão | Ajuda gestores a controlar estações compartilhadas, cobranças, disponibilidade, usuários e histórico de recargas. | Cobranças por recarga, disponibilidade por estação, energia utilizada, histórico completo, curva de potência, informações de usuário, monitoramento remoto, controle de acesso e avisos de falha. | Venda de equipamentos, implantação, operação, plataforma digital e serviços de gestão para condomínios, empresas e eletropostos. | A proposta é ampla, mas não deixa claro, em página pública, um modelo de IA para previsão, anomalias, recomendação automática de rateio e redução de gasto energético local. |
+| Zaptec Pro | Resolve o problema de escalar muitos carregadores em apartamentos, estacionamentos e ambientes comerciais sem sobrecarregar a infraestrutura elétrica. | Balanceamento dinâmico de carga e fases, portal de gestão, controle de usuários, relatórios de carga, status em tempo real, conectividade e medição por sessão. | Venda de hardware e ecossistema de gestão para instalações compartilhadas e comerciais. | É forte em infraestrutura e gestão técnica, mas não é apresentado como solução brasileira de governança condominial com rateio, auditoria e recomendação de economia local. |
+| Wallbox Pulsar Plus | Atende recargas residenciais e multifamiliares com carregador compacto, aplicativo e recursos de gerenciamento de energia. | Agendamento de sessões, monitoramento de energia, Wi-Fi, Bluetooth, identificação por aplicativo, gerenciamento dinâmico de carga e integração com energia solar. | Venda de carregador, acessórios e software de energia para usuários residenciais, multifamiliares e parceiros. | O foco principal é carregamento e energia, não uma operação completa de governança energética condominial com múltiplos usuários, rateio e auditoria mensal. |
 | GoodWe HCA G2 + Sense Plus | É a base real do desafio, permitindo monitorar a planta FIAP e, conforme acesso, consultar dados relacionados ao carregador instalado. | Visualização de potência, energia, status, modos de operação, dados da planta, relatórios e exportação por aplicativo ou plataforma, conforme acesso disponível. | Venda de hardware e ecossistema de monitoramento GoodWe; nesta sprint, uso acadêmico com conta de instalador e dados da planta FIAP. | Não há API pública liberada para os alunos nesta etapa, não há cobrança automática integrada, não há OCPP no HCA G2, o limite nativo de RFID é de até 10 cartões e o SEMS web observado não confirmou sessões do carregador. |
 
 ### O que o EV ChargeOps Aprende com o Mercado
 
 A análise mostra que o mercado já oferece bons carregadores, aplicativos e plataformas de gestão. Portanto, o EV ChargeOps não deve tentar competir apenas dizendo que "monitora recargas". Isso já existe.
 
-Depois da mentoria, o diferencial ficou mais claro: o EV ChargeOps precisa resolver o espaço entre o que o Sense Plus já mostra e o que um condomínio ou gestor precisa para tomar decisão e cobrar com justiça.
+Depois da mentoria e da validação do SEMS Portal, o diferencial ficou mais claro: o EV ChargeOps precisa resolver o espaço entre o que o Sense Plus/SEMS já mostra e o que um condomínio ou gestor precisa para tomar decisão, cobrar com justiça e reduzir o gasto de energia.
 
 O diferencial precisa estar em quatro pontos:
 
 1. **Rateio transparente:** cada sessão deve virar uma linha auditável de consumo, custo e regra aplicada.
-2. **Importação pragmática de dados:** a solução deve funcionar mesmo sem API, a partir de relatórios exportados do Sense Plus.
-3. **Inteligência operacional:** a plataforma deve transformar dados em alertas, previsão de demanda, detecção de anomalias e recomendações.
+2. **Importação pragmática de dados:** a solução deve funcionar mesmo sem API, a partir dos dados disponíveis do SEMS/Sense Plus e de relatórios confirmados.
+3. **Inteligência energética:** a plataforma deve transformar dados em alertas, previsão de demanda, detecção de anomalias e recomendações de economia.
 4. **Foco em ambientes compartilhados brasileiros:** condomínios, edifícios corporativos e campus precisam de linguagem simples, relatórios claros e regras compatíveis com gestão coletiva.
 
-Em outras palavras, o EV ChargeOps deve ser pensado menos como "app de carregador" e mais como **sistema de gestão da operação de recarga compartilhada**.
+Em outras palavras, o EV ChargeOps deve ser pensado menos como "app de carregador" e mais como **sistema de governança energética para recarga compartilhada**.
 
 ## Análise Própria da Equipe
 
-O problema central não é a falta de carregadores. O problema é que, quando o carregador entra em um espaço compartilhado, ele passa a fazer parte de uma rotina administrativa: controle de acesso, energia, cobrança, suporte, prestação de contas e tomada de decisão.
+O problema central não é a falta de carregadores. O problema é que, quando o carregador entra em um espaço compartilhado, ele passa a fazer parte de uma rotina administrativa e energética: controle de acesso, energia, cobrança, suporte, prestação de contas, decisão de expansão e redução de gasto.
 
 Em um condomínio, por exemplo, a discussão não termina quando o carro carrega. Ela continua na assembleia, no boleto, na reclamação do morador e na dúvida do síndico sobre expansão da infraestrutura. Em uma empresa, a mesma lógica aparece em controle de frota, benefício para funcionários, custos por centro de responsabilidade e disponibilidade para visitantes.
 
-Por isso, a solução precisa nascer com uma visão operacional. O usuário quer carregar sem burocracia. O gestor quer saber se a cobrança é justa, se o carregador está disponível, se existe uso excessivo e se vale a pena instalar novos pontos. A plataforma deve atender esses dois lados.
+Por isso, a solução precisa nascer com uma visão operacional e energética. O usuário quer carregar sem burocracia. O gestor quer saber se a cobrança é justa, se o carregador está disponível, se existe uso excessivo, se vale a pena instalar novos pontos e se o local poderia gastar menos com energia ou aproveitar melhor geração solar. A plataforma deve atender esses dois lados.
 
-Antes da mentoria, seria fácil cair em uma solução "água com açúcar": um painel genérico com usuário, kWh e valor. Depois da mentoria, esse caminho ficou insuficiente. A solução precisa reconhecer as restrições reais do equipamento e transformar essas restrições em proposta de valor. A ausência de API, por exemplo, não é só um problema técnico; ela orienta o MVP para importação de relatórios e conferência auditável. O limite de 10 cartões RFID também não é detalhe; ele mostra que condomínios maiores precisarão de uma camada extra de identificação e governança.
+Antes da mentoria, seria fácil cair em uma solução "água com açúcar": um painel genérico com usuário, kWh e valor. Depois da mentoria, esse caminho ficou insuficiente. A solução precisa reconhecer as restrições reais do equipamento e transformar essas restrições em proposta de valor. A ausência de API, por exemplo, não é só um problema técnico; ela orienta o MVP para importação de dados e conferência auditável. O limite de 10 cartões RFID também não é detalhe; ele mostra que condomínios maiores precisarão de uma camada extra de identificação e governança. E os dados agregados do SEMS mostram outra oportunidade: usar a IA para recomendar economia energética, não apenas para cobrar recargas.
 
 A conclusão desta frente é que o EV ChargeOps deve priorizar:
 
 - identificação confiável de usuários;
 - registro completo das sessões;
 - medição clara de kWh;
-- importação de relatórios exportados do Sense Plus;
+- importação de dados disponíveis do SEMS/Sense Plus e relatórios de sessão quando confirmados;
 - cálculo auditável de custo e rateio;
 - histórico por usuário, unidade e carregador;
 - relatórios mensais simples;
 - alertas para falhas, ociosidade e uso fora do padrão;
 - análise de picos de demanda e horários de maior uso;
+- recomendações de economia, aproveitamento solar e pré-viabilidade de expansão fotovoltaica;
 - tratamento do limite de RFID em cenários com muitos usuários;
 - base de dados preparada para IA na Sprint 02.
 
 ## Recorte de MVP Recomendado
 
-Com base no enunciado, na mentoria e na validação visual do SEMS Portal, o MVP mais forte para este grupo continua sendo o **modelo de rateio e cobrança a partir de dados de sessão**, com uma camada de inteligência para identificar padrões de uso e possíveis problemas. Porém, essa base de sessão precisa ser confirmada em exportação específica do carregador, no app Sense Plus ou por liberação GoodWe/FIAP.
+Com base no enunciado, na mentoria e na validação visual do SEMS Portal, o MVP mais forte para este grupo é uma **plataforma de governança energética para recarga compartilhada**. O rateio continua importante, mas deixa de ser a proposta inteira. A solução deve calcular cobrança quando houver base de sessão validada e, desde o início, usar dados agregados do SEMS para gerar recomendações de economia energética.
 
-Esse foco é melhor do que tentar começar por controle dinâmico de demanda, porque o controle de demanda depende mais de medidor inteligente, configuração elétrica e validação técnica do carregador. Já o rateio pode ser demonstrado com dados de sessão, mesmo que a integração inicial seja por arquivo exportado.
+Esse foco é melhor do que tentar começar por controle dinâmico de demanda como ação física, porque o controle de demanda depende mais de medidor inteligente, configuração elétrica e validação técnica do carregador. Já a governança energética pode começar com importação, análise e recomendação: o sistema identifica pico, sugere janelas de recarga, mostra se há oportunidade de usar geração solar e aponta quando vale estudar placas solares ou novos carregadores.
 
 O MVP da Sprint 02 pode ser definido assim:
 
@@ -220,8 +226,9 @@ O MVP da Sprint 02 pode ser definido assim:
 6. Separar consumo individual de custos comuns da operação.
 7. Gerar relatório mensal para gestor e usuário.
 8. Aplicar IA ou análise estatística para detectar anomalias, horários de pico e tendência de demanda.
+9. Gerar recomendações de economia: melhor horário de recarga, redução de pico, maior aproveitamento solar e pré-viabilidade de expansão fotovoltaica.
 
-Assim, a solução fica conectada ao hardware real, respeita as limitações da GoodWe e entrega valor direto para o problema de condomínio, que foi o foco reforçado para a turma online.
+Assim, a solução fica conectada ao hardware real, respeita as limitações da GoodWe e entrega valor direto para o problema de condomínio: cobrar com justiça e gastar menos para operar a recarga.
 
 ## Decisões para as Próximas Frentes
 
@@ -231,7 +238,7 @@ Esta primeira frente orienta as próximas decisões do projeto:
 - Na Frente 2, também será necessário entender a base regulatória para cobrança e operação compartilhada.
 - Na Frente 3, a arquitetura deverá considerar quatro camadas: carregador, conectividade, aplicação e interface.
 - Na Frente 3, o modelo de rateio deverá partir do consumo em kWh por sessão e tratar custos adicionais de forma separada e transparente.
-- Na Frente 3, a IA deverá atuar sobre dados reais ou simulados de sessão, e não apenas aparecer como recurso decorativo.
+- Na Frente 3, a IA deverá atuar sobre dados reais ou simulados de sessão e sobre dados energéticos agregados da planta, e não apenas aparecer como recurso decorativo.
 - Na Frente 3, a arquitetura deverá prever importação de dados SEMS/Sense Plus disponíveis e relatórios de sessão quando confirmados, antes de prometer integração por API.
 
 ## Checklist de Atendimento ao Enunciado

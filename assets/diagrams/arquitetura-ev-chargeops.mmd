@@ -15,16 +15,16 @@ flowchart LR
 
   subgraph Aplicacao["Camada de aplicação"]
     IMPORT["Importador e normalizador"]
-    DB["Banco EV ChargeOps\nsessões usuários faturas"]
+    DB["Banco EV ChargeOps\nsessões energia faturas"]
     RATEIO["Motor de rateio"]
-    AI["IA operacional\nprevisão anomalia perfis"]
+    AI["IA energética\nprevisão anomalia economia"]
     AUDIT["Auditoria e revisão manual"]
   end
 
   subgraph Interfaces["Camada de apresentação"]
     MANAGER["Painel do gestor"]
     USER["Fatura do usuário"]
-    ALERTS["Alertas e recomendações"]
+    ALERTS["Alertas e recomendações\nredução de gasto"]
   end
 
   EV --> CHG

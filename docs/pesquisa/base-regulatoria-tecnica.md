@@ -2,7 +2,7 @@
 
 ## Objetivo desta Frente
 
-Esta frente responde a uma pergunta prática: **o EV ChargeOps pode funcionar no mundo real, respeitando regra regulatória, limite técnico do carregador GoodWe e a forma como os dados realmente chegam até a equipe?**
+Esta frente responde a uma pergunta prática: **o EV ChargeOps pode funcionar no mundo real, respeitando regra regulatória, limite técnico do carregador GoodWe, forma real de acesso aos dados e necessidade de reduzir gasto energético do local?**
 
 O ponto mais importante da análise é não prometer uma integração que ainda não existe para os alunos. O enunciado cita a API GoodWe/SEMS como fonte possível de dados, mas a mentoria esclareceu que a API para carregadores está em desenvolvimento e **não será liberada para os alunos nesta etapa**. Por isso, a arquitetura da Sprint 1 deve tratar a API como evolução futura, e não como dependência do MVP.
 
@@ -13,7 +13,8 @@ O caminho mais realista para a Sprint 2 é:
 3. separar o que é dado energético agregado da planta do que é dado específico de sessão do carregador;
 4. exportar ou consultar relatórios disponíveis, conforme acesso e formato real;
 5. importar dados agregados do SEMS e usar dataset simulado para sessões enquanto a exportação real do carregador não for confirmada;
-6. calcular consumo, rateio, alertas e indicadores quando houver base de sessão validada.
+6. calcular consumo, rateio, alertas e indicadores quando houver base de sessão validada;
+7. gerar recomendações de economia com base em geração, consumo, rede, bateria, horários de uso e tarifa parametrizável.
 
 ## Premissas Vindas da Mentoria GoodWe/FIAP
 
@@ -26,6 +27,7 @@ O caminho mais realista para a Sprint 2 é:
 | RFID | O carregador vem com 2 cartões e suporta até 10 cartões configuráveis. | O limite de identificação nativa é uma dor real para condomínios maiores. |
 | Cobrança | Não há cobrança automática integrada ao carregador atual. | O cálculo de rateio/cobrança é o coração da solução, não um acessório. |
 | Controle dinâmico | Pode ser configurado com smart meter T6 para limitar corrente/demanda. | É um diferencial futuro, mas depende de validação técnica e não deve ser o primeiro MVP. |
+| Dados energéticos da planta | O SEMS web observado mostra geração, potência, rede, bateria, consumo e estatísticas energéticas. | A IA pode usar esses dados para recomendar economia, horários melhores de recarga e pré-viabilidade de expansão solar. |
 
 ## Recorte Regulatório
 
@@ -53,6 +55,8 @@ Na prática, a fatura deve mostrar:
 - custos comuns rateados, quando aprovados pelo condomínio;
 - ajustes, descontos, contestação ou exceção;
 - regra aplicada no mês.
+
+Além da fatura, o painel do gestor deve separar claramente **cobrança** de **recomendação energética**. Cobrança é valor aplicado ao usuário. Recomendação é uma orientação operacional, como deslocar recargas, reduzir pico ou estudar geração solar. Essa separação evita que uma sugestão de IA seja confundida com uma decisão financeira obrigatória.
 
 ### 2. Comunicação Prévia à Distribuidora
 
@@ -110,6 +114,18 @@ Requisitos mínimos:
 | Sense Plus/SEMS | Visualização remota de planta, potência, energia, status, modos e relatórios. | Fonte operacional para dados energéticos agregados e possível fonte de relatórios do carregador, desde que a exportação de sessões seja confirmada. |
 | Solar Go | Aplicativo de comissionamento/configuração local. | Apoiar configuração inicial, pareamento e diagnóstico; não é a base da fatura. |
 
+### Identificação do Usuário na Recarga
+
+Pelo transcript da mentoria, existem três caminhos de liberação de carga:
+
+| Caminho | O que resolve | Limite para o EV ChargeOps |
+| --- | --- | --- |
+| RFID | Autoriza localmente a carga e pode indicar qual cartão foi usado. | Só permite faturamento automático se o ID do cartão aparecer no relatório/app ou for conciliado com cadastro interno. |
+| Start pelo Sense Plus/Solar Go | Permite iniciar a carga pelo aplicativo ou web, quando a configuração exige start manual. | Só identifica usuário se cada pessoa tiver acesso individual ou se houver registro confiável de quem iniciou. |
+| Modo automático | Inicia a carga ao conectar o veículo, conforme configuração. | Não identifica a pessoa sozinho; exige reserva, QR Code, cadastro manual, regra operacional ou conciliação do gestor. |
+
+Portanto, é tecnicamente incorreto prometer que sempre será possível mensurar o usuário apenas pelo carregador. O correto é dizer que a mensuração é possível **quando houver credencial, RFID, app individualizado ou processo de conciliação confiável**.
+
 ## GoodWe API/SEMS: Tensão Entre Enunciado e Mentoria
 
 O enunciado pede pesquisar a API GoodWe/SEMS e quais dados ela expõe sobre carregador, como status, potência, energia entregue e eventos de sessão. Porém, a mentoria esclareceu que a API dos carregadores ainda não será liberada para os alunos.
@@ -154,6 +170,10 @@ Campos já observados no SEMS web para contexto energético da planta:
 - curvas de `PV(W)`, `Battery(W)`, `Grid(W)`, `Load(W)`, `Genset Power(W)` e `Micro-grid Power(W)`;
 - estatísticas de `AC Output` e `Load Consumption`.
 
+Esses campos permitem um segundo eixo de produto: **recomendação de economia energética**. A plataforma pode comparar recargas com geração fotovoltaica disponível, identificar horários de maior dependência da rede, estimar impacto de deslocar sessões e apontar quando há indício de que um estudo fotovoltaico vale ser feito.
+
+Esse ponto precisa de cuidado: o EV ChargeOps não deve prometer dimensionamento final de placas solares. Ele pode gerar uma pré-análise com base nos dados disponíveis, mas a instalação real depende de área útil, sombreamento, irradiação local, orçamento, homologação, regras da distribuidora e projeto técnico.
+
 ## Opção de Aprofundamento Escolhida: APIs Complementares
 
 Para esta frente, a opção escolhida foi a **Opção C - Mapeamento de APIs complementares**. A escolha faz sentido porque a principal API GoodWe não estará disponível para os alunos nesta etapa. Em vez de travar a solução, o EV ChargeOps pode enriquecer o produto com fontes externas úteis para expansão, benchmark, localização, tarifa e contexto regional.
@@ -164,7 +184,7 @@ Para esta frente, a opção escolhida foi a **Opção C - Mapeamento de APIs com
 | --- | --- | --- | --- |
 | Open Charge Map API | Localização de pontos de recarga, comentários, check-ins, fotos e informações de estações. | Comparar disponibilidade de recarga no entorno, mapear concorrência e estimar maturidade da região. | A própria Open Charge Map alerta que os dados vêm de fontes públicas e contribuições, sem garantia de precisão. |
 | Google Places API - `evChargeOptions` | Quantidade de conectores, agregação por tipo, potência máxima, disponibilidade e status fora de serviço quando disponível. | Enriquecer mapa externo, comparar estações, apoiar análise de expansão e UX de localização. | Requer chave, custo de uso e respeito às políticas da Google Maps Platform. |
-| ANEEL Open Data | Tarifas de energia, TUSD, TE, dados de distribuidoras e conjuntos públicos do setor elétrico. | Apoiar cálculo de custo estimado por distribuidora, simulação de cenário tarifário e contextualização regulatória. | Os dados precisam ser tratados por período, distribuidora, classe e modalidade tarifária. |
+| ANEEL Open Data | Tarifas de energia, TUSD, TE, dados de distribuidoras e conjuntos públicos do setor elétrico. | Apoiar cálculo de custo estimado por distribuidora, simulação de cenário tarifário, recomendação de economia e contextualização regulatória. | Os dados precisam ser tratados por período, distribuidora, classe e modalidade tarifária. |
 | IBGE Localidades API | Estados, municípios, regiões e códigos oficiais. | Padronizar cadastro de endereço, cidade, UF, região e expansão geográfica. | Não substitui dados de rede elétrica; serve para geografia e organização territorial. |
 
 ### Como Essas APIs Ajudam de Verdade
@@ -175,7 +195,7 @@ Essas APIs não são enfeite. Elas ajudam a transformar o EV ChargeOps em uma pl
 - **ANEEL Open Data** aproxima o cálculo de custo do setor elétrico real, em vez de usar uma tarifa fictícia fixa para sempre.
 - **IBGE Localidades** evita cadastros bagunçados e permite segmentar expansão por cidade, UF e região.
 
-Para a Sprint 2, a prioridade ainda é preparar a importação de sessões, validar a fonte real disponível e calcular rateio com dataset simulado ou relatório confirmado. As APIs complementares entram como camada de inteligência e expansão, não como requisito mínimo para o primeiro protótipo.
+Para a Sprint 2, a prioridade ainda é preparar a importação de sessões, validar a fonte real disponível, calcular rateio com dataset simulado ou relatório confirmado e usar os dados de planta para recomendações de economia. As APIs complementares entram como camada de inteligência e expansão, não como requisito mínimo para o primeiro protótipo.
 
 ## Riscos Técnicos e Mitigações
 
@@ -188,12 +208,14 @@ Para a Sprint 2, a prioridade ainda é preparar a importação de sessões, vali
 | Limite de 10 RFID | Pode não atender condomínios grandes. | Mapear RFID para usuário/unidade e estudar camada externa de autenticação na evolução. |
 | Dados reais não publicáveis | Pode comprometer evidência no repositório. | Usar dataset simulado com estrutura realista e manter dados reais apenas em ambiente controlado. |
 | Tarifa elétrica complexa | Cálculo pode variar por distribuidora, modalidade e horário. | Começar com tarifa parametrizável e registrar a regra usada em cada fatura. |
+| Recomendação solar parecer promessa de engenharia | Pode passar a impressão de que o sistema dimensiona placas sem vistoria técnica. | Tratar como pré-viabilidade e exigir validação por projeto técnico antes de qualquer implantação. |
+| Modo automático sem identificação | Pode gerar sessão sem usuário responsável. | Bloquear faturamento automático e exigir conciliação por reserva, QR Code, cadastro manual ou revisão do gestor. |
 
 ## Decisão Técnica para a Sprint 2
 
 A Frente 2 recomenda a seguinte decisão:
 
-> O EV ChargeOps deve nascer como uma plataforma de importação, normalização e auditoria preparada para duas classes de dados: dados energéticos agregados do SEMS e sessões de recarga quando a exportação real for confirmada. A solução não deve depender de API indisponível nem assumir que o SEMS web já fornece sessões por RFID.
+> O EV ChargeOps deve nascer como uma plataforma de governança energética preparada para duas classes de dados: dados energéticos agregados do SEMS e sessões de recarga quando a exportação real for confirmada. A solução não deve depender de API indisponível, não deve assumir que o SEMS web já fornece sessões por RFID e deve usar IA para recomendar economia sem substituir validação técnica.
 
 Essa decisão torna o projeto mais executável, mais honesto e mais competitivo.
 

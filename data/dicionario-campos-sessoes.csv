@@ -1,20 +1,20 @@
 campo,descricao,tipo,origem_prevista,obrigatorio,uso_no_ev_chargeops
-session_id,Identificador unico da sessao de recarga,texto,Sense Plus ou gerado no importador,sim,Evitar duplicidade e rastrear faturamento
-charger_id,Identificador do carregador,texto,Sense Plus ou cadastro interno,sim,Vincular sessao ao equipamento GW7K HC20/HCA G2
-charger_model,Modelo do carregador,texto,Cadastro interno,sim,Auditoria tecnica e filtros
-rfid_masked,Identificador RFID mascarado,texto,Sense Plus ou conciliacao manual,nao,Associar sessao a usuario/unidade sem expor codigo real
-user_id,Identificador interno do usuario,texto,EV ChargeOps,nao,Calcular consumo individual
-unit_id,Identificador da unidade ou centro de custo,texto,EV ChargeOps,nao,Gerar rateio por unidade
-start_at,Data e hora de inicio,datetime,Sense Plus,sim,Calcular duracao e horario de pico
-end_at,Data e hora de fim,datetime,Sense Plus,sim,Calcular duracao e fechamento mensal
-duration_min,Duracao da sessao em minutos,numero,Sense Plus ou calculado,sim,Auditar tempo conectado e ociosidade
-energy_kwh,Energia entregue na sessao em kWh,numero,Sense Plus,sim,Base do custo variavel
-avg_power_kw,Potencia media da sessao em kW,numero,Calculado ou Sense Plus,nao,Detectar anomalias e perfil de uso
-max_power_kw,Potencia maxima observada em kW,numero,Sense Plus quando disponivel,nao,Apoiar analise de demanda
-current_a,Corrente registrada ou media em amperes,numero,Sense Plus ou Modbus futuro,nao,Apoiar controle de demanda
-operation_mode,Modo de operacao,texto,Sense Plus,nao,Diferenciar carga rapida solar bateria ou combinada
-session_status,Status da sessao,texto,Sense Plus,sim,Separar concluida interrompida falha ou revisao
-source_file,Arquivo de origem,texto,EV ChargeOps,sim,Auditoria da importacao
-imported_at,Data e hora da importacao,datetime,EV ChargeOps,sim,Rastrear processamento
-review_flag,Indicador de revisao,texto,EV ChargeOps,sim,Evitar faturamento automatico de caso suspeito
-review_reason,Motivo da revisao,texto,EV ChargeOps,nao,Explicar anomalia ou excecao
+session_id,Identificador único da sessão de recarga,texto,Sense Plus ou gerado no importador,sim,Evitar duplicidade e rastrear faturamento
+charger_id,Identificador do carregador,texto,Sense Plus ou cadastro interno,sim,Vincular sessão ao equipamento GW7K HC20/HCA G2
+charger_model,Modelo do carregador,texto,Cadastro interno,sim,Auditoria técnica e filtros
+rfid_masked,Identificador RFID mascarado,texto,Sense Plus ou conciliação manual,não,Associar sessão a usuário/unidade sem expor código real
+user_id,Identificador interno do usuário,texto,EV ChargeOps,não,Calcular consumo individual
+unit_id,Identificador da unidade ou centro de custo,texto,EV ChargeOps,não,Gerar rateio por unidade
+start_at,Data e hora de início,datetime,Sense Plus,sim,Calcular duração e horário de pico
+end_at,Data e hora de fim,datetime,Sense Plus,sim,Calcular duração e fechamento mensal
+duration_min,Duração da sessão em minutos,número,Sense Plus ou calculado,sim,Auditar tempo conectado e ociosidade
+energy_kwh,Energia entregue na sessão em kWh,número,Sense Plus,sim,Base do custo variável
+avg_power_kw,Potência média da sessão em kW,número,Calculado ou Sense Plus,não,Detectar anomalias e perfil de uso
+max_power_kw,Potência máxima observada em kW,número,Sense Plus quando disponível,não,Apoiar análise de demanda
+current_a,Corrente registrada ou média em ampères,número,Sense Plus ou Modbus futuro,não,Apoiar controle de demanda
+operation_mode,Modo de operação,texto,Sense Plus,não,Diferenciar carga rápida solar bateria ou combinada
+session_status,Status da sessão,texto,Sense Plus,sim,Separar concluída interrompida falha ou revisão
+source_file,Arquivo de origem,texto,EV ChargeOps,sim,Auditoria da importação
+imported_at,Data e hora da importação,datetime,EV ChargeOps,sim,Rastrear processamento
+review_flag,Indicador de revisão,texto,EV ChargeOps,sim,Evitar faturamento automático de caso suspeito
+review_reason,Motivo da revisão,texto,EV ChargeOps,não,Explicar anomalia ou exceção

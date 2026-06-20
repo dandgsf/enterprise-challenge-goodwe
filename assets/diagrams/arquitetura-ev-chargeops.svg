@@ -21,7 +21,7 @@
 
   <rect class="bg" x="0" y="0" width="1280" height="760"/>
   <text x="54" y="50" fill="#182326" font-family="Arial, sans-serif" font-size="30" font-weight="700">EV ChargeOps - arquitetura proposta</text>
-  <text x="54" y="80" fill="#526064" font-family="Arial, sans-serif" font-size="15">MVP orientado a dados SEMS/Sense Plus disponíveis, sessões confirmadas e integração técnica futura.</text>
+  <text x="54" y="80" fill="#526064" font-family="Arial, sans-serif" font-size="15">MVP de governança energética: rateio auditável, dados SEMS e recomendações para reduzir gasto local.</text>
 
   <rect class="layer" x="44" y="115" width="270" height="575" rx="12"/>
   <text class="layer-title" x="68" y="150">1. Física</text>
@@ -49,7 +49,7 @@
 
   <rect class="box-alt" x="378" y="185" width="220" height="86"/>
   <text class="label" x="398" y="218">SEMS/Sense Plus</text>
-  <text class="small" x="398" y="242">web/app monitoramento</text>
+  <text class="small" x="398" y="242">energia da planta e app</text>
 
   <rect class="box" x="378" y="305" width="220" height="80"/>
   <text class="label" x="398" y="338">Relatórios/arquivos</text>
@@ -68,19 +68,19 @@
 
   <rect class="box" x="688" y="178" width="250" height="74"/>
   <text class="label" x="708" y="210">Importador</text>
-  <text class="small" x="708" y="232">normaliza sessões e campos</text>
+  <text class="small" x="708" y="232">normaliza sessões e energia</text>
 
   <rect class="box" x="688" y="282" width="250" height="82"/>
   <text class="label" x="708" y="315">Banco EV ChargeOps</text>
-  <text class="small" x="708" y="339">usuários, sessões e faturas</text>
+  <text class="small" x="708" y="339">sessões, energia e faturas</text>
 
   <rect class="box-alt" x="688" y="394" width="250" height="82"/>
   <text class="label" x="708" y="426">Motor de rateio</text>
   <text class="small" x="708" y="450">kWh + custo comum + exceções</text>
 
   <rect class="box-alt" x="688" y="506" width="250" height="82"/>
-  <text class="label" x="708" y="538">IA operacional</text>
-  <text class="small" x="708" y="562">previsão, anomalia e perfis</text>
+  <text class="label" x="708" y="538">IA energética</text>
+  <text class="small" x="708" y="562">previsão, anomalia e economia</text>
 
   <rect class="box-risk" x="688" y="616" width="250" height="52"/>
   <text class="label" x="708" y="648">Auditoria</text>
@@ -98,7 +98,7 @@
 
   <rect class="box-alt" x="1043" y="465" width="168" height="86"/>
   <text class="label" x="1063" y="498">Alertas</text>
-  <text class="small" x="1063" y="522">decisão e revisão</text>
+  <text class="small" x="1063" y="522">redução de gasto</text>
 
   <path class="arrow" d="M288 326 H378"/>
   <path class="arrow" d="M598 228 H688"/>
@@ -115,5 +115,5 @@
   <path class="arrow dash" d="M288 451 C330 451 336 460 378 460"/>
   <path class="arrow dash" d="M598 575 C638 575 648 548 688 548"/>
 
-  <text x="54" y="724" fill="#526064" font-family="Arial, sans-serif" font-size="13">Nota: a API GoodWe para carregadores foi tratada como evolução futura, pois a mentoria informou que ela não será liberada aos alunos nesta etapa.</text>
+  <text x="54" y="724" fill="#526064" font-family="Arial, sans-serif" font-size="13">Nota: recomendações de economia e solar são pré-análises; implantação exige validação técnica e a API GoodWe segue como evolução futura.</text>
 </svg>

@@ -1,0 +1,16 @@
+campo,descrição,tipo,origem_prevista,obrigatório,uso_no_ev_chargeops
+snapshot_id,Identificador do registro energético da planta,texto,EV ChargeOps,sim,Evitar duplicidade e rastrear análise
+plant_id,Identificador interno da planta,texto,SEMS ou cadastro interno,sim,Vincular dados à planta monitorada
+recorded_at,Data e hora da leitura,datetime,SEMS,sim,Analisar horário de pico e coincidência solar
+pv_power_kw,Potência fotovoltaica instantânea em kW,número,SEMS,não,Comparar geração disponível com recarga
+load_power_kw,Potência de carga/consumo local em kW,número,SEMS,não,Identificar pressão de demanda no local
+grid_power_kw,Potência importada ou exportada da rede em kW,número,SEMS,não,Estimar dependência da rede elétrica
+battery_power_kw,Potência de carga ou descarga da bateria em kW,número,SEMS,não,Avaliar apoio da bateria à recarga
+pv_generation_kwh,Geração fotovoltaica acumulada no período em kWh,número,SEMS,sim,Apoiar recomendação de uso solar
+load_consumption_kwh,Consumo local acumulado no período em kWh,número,SEMS,sim,Comparar consumo local com sessões simuladas
+grid_consumption_kwh,Energia consumida da rede no período em kWh,número,SEMS,não,Estimar custo e dependência da rede
+feed_in_kwh,Energia injetada na rede no período em kWh,número,SEMS,não,Indicar possível excedente solar
+estimated_tariff_brl_kwh,Tarifa estimada usada na simulação,número,ANEEL Open Data ou parâmetro do gestor,não,Calcular impacto financeiro aproximado
+recommendation_type,Tipo de recomendação energética,texto,EV ChargeOps,não,Classificar sugestão de horário pico solar ou expansão
+recommendation_summary,Resumo da recomendação,texto,EV ChargeOps,não,Explicar a sugestão para o gestor
+review_required,Indica se a recomendação exige validação técnica,texto,EV ChargeOps,sim,Evitar que pré-viabilidade seja tratada como projeto final

@@ -3,6 +3,10 @@ flowchart LR
     B --> C[Veículo conectado]
     C --> D[Carregador valida e inicia a sessão]
     D --> E[Registro de horário, kWh, potência e status]
-    E --> F[Sessão encerrada]
-    F --> G[Cálculo de custo ou rateio]
-    G --> H[Histórico, relatório e alertas]
+    E --> F{Há usuário identificado?}
+    F -->|Sim| G[Sessão associada a usuário ou unidade]
+    F -->|Não| H[Conciliação por reserva, QR Code ou gestor]
+    G --> I[Cálculo de custo ou rateio]
+    H --> I
+    I --> J[Histórico, relatório e alertas]
+    J --> K[Recomendação de economia energética]

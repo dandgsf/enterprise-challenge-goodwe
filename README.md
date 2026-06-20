@@ -2,7 +2,7 @@
 
 Projeto da Sprint 01 do Enterprise Challenge 2026, Fase 4 - Energia para sobreviver.
 
-O objetivo desta sprint é pesquisar, documentar e propor a base da solução **EV ChargeOps**, termo usado no enunciado do desafio para representar uma plataforma capaz de transformar sessões de recarga de veículos elétricos em dados estruturados, rateio justo e inteligência operacional.
+O objetivo desta sprint é pesquisar, documentar e propor a base da solução **EV ChargeOps**, termo usado no enunciado do desafio para representar uma plataforma capaz de transformar sessões de recarga de veículos elétricos e dados energéticos do local em governança, rateio justo e inteligência para reduzir custos.
 
 ## Equipe
 
@@ -36,7 +36,7 @@ O objetivo desta sprint é pesquisar, documentar e propor a base da solução **
 
 ## Resumo da Solução
 
-O EV ChargeOps é proposto como uma camada de gestão para recarga compartilhada em condomínios, edifícios corporativos e campus universitários.
+O EV ChargeOps é proposto como uma camada de **governança energética para recarga compartilhada** em condomínios, edifícios corporativos e campus universitários. A solução não se limita a mostrar recargas: ela organiza quem usou, quanto consumiu, quanto deve pagar e quais decisões podem reduzir o gasto local com energia.
 
 No cenário real da FIAP/GoodWe, o carregador usado como referência é o **GoodWe GW7K HC20**, linha **HCA G2**, de **7 kW em corrente alternada**, monitorado pelo ecossistema **SEMS/Sense Plus**. A mentoria técnica esclareceu pontos decisivos:
 
@@ -48,11 +48,15 @@ No cenário real da FIAP/GoodWe, o carregador usado como referência é o **Good
 
 Uma validação visual feita no SEMS Portal em 20/06/2026 mostrou que o acesso web disponível exibe principalmente dados agregados de planta fotovoltaica/bateria, gráficos de potência, geração, renda, estatísticas energéticas e relatórios por inversor/indicador. Nessa inspeção, **não foi observada uma tela web explícita de sessões do carregador por usuário/RFID**.
 
-Por isso, a proposta não depende de uma API indisponível nem promete que o SEMS web, sozinho, entrega todos os campos de rateio. O MVP da Sprint 2 deve ter adaptadores separados para:
+Por isso, a proposta não depende de uma API indisponível nem promete que o SEMS web, sozinho, entrega todos os campos de rateio. A proposta técnica atual combina **rateio auditável** com **IA para economia energética**, usando adaptadores separados para:
 
 - dados energéticos agregados da planta no SEMS;
 - relatórios reais de sessão do carregador, quando forem disponibilizados pelo app, por exportação específica ou pela GoodWe/FIAP;
-- dataset simulado de sessões para implementar e testar rateio, IA e auditoria enquanto a exportação real não for confirmada.
+- datasets simulados de sessões e energia local para implementar e testar rateio, IA, auditoria e recomendações de economia enquanto a exportação real não for confirmada.
+
+Em uma frase:
+
+> O EV ChargeOps é um sistema de governança energética que calcula rateio de recarga, audita o uso do carregador e recomenda ações para reduzir gasto local, como melhor horário de recarga, redução de pico, uso de energia solar disponível e análise preliminar de expansão fotovoltaica.
 
 ## Problema
 
@@ -63,9 +67,9 @@ Quando um carregador é usado por várias pessoas, a operação deixa de ser ape
 - qual regra de cobrança foi aplicada?
 - como tratar falha, sessão interrompida ou ociosidade?
 - como o síndico ou gestor comprova que o rateio foi justo?
-- como prever picos e decidir se vale instalar novos carregadores?
+- como prever picos e decidir se vale instalar novos carregadores, placas solares ou regras de uso mais econômicas?
 
-Sem dados organizados, a recarga compartilhada pode gerar conflito, cobrança injusta e baixa confiança dos usuários. O EV ChargeOps resolve esse espaço entre o carregador e a gestão financeira/operacional.
+Sem dados organizados, a recarga compartilhada pode gerar conflito, cobrança injusta, desperdício de energia e baixa confiança dos usuários. O EV ChargeOps resolve esse espaço entre o carregador, a gestão financeira e a gestão energética do local.
 
 ## Frente 1 - Contexto e Problema
 
@@ -81,7 +85,7 @@ A Frente 1 documenta:
 
 **Aprofundamento escolhido:** Opção A - Análise de mercado.
 
-Foram analisadas NeoCharge, Zaptec Pro, Wallbox Pulsar Plus e GoodWe HCA G2 + Sense Plus. A conclusão é que o EV ChargeOps não deve tentar ser apenas mais um aplicativo de carregador. Seu diferencial deve ser o **rateio auditável a partir de dados de sessão**, com inteligência operacional para gestores.
+Foram analisadas NeoCharge, Zaptec Pro, Wallbox Pulsar Plus e GoodWe HCA G2 + Sense Plus. A conclusão é que o EV ChargeOps não deve tentar ser apenas mais um aplicativo de carregador. Seu diferencial deve ser a **governança energética da recarga compartilhada**, unindo rateio auditável, identificação do usuário quando disponível e IA para economia local.
 
 Artefatos:
 
@@ -112,12 +116,20 @@ APIs mapeadas:
 | --- | --- |
 | Open Charge Map API | Mapear estações próximas, comparar infraestrutura e entender maturidade de recarga no entorno. |
 | Google Places API - `evChargeOptions` | Enriquecer informações de pontos de recarga, conectores e disponibilidade quando houver dados. |
-| ANEEL Open Data | Apoiar simulações tarifárias, dados de distribuidoras e cálculo parametrizável de custo por kWh. |
+| ANEEL Open Data | Apoiar simulações tarifárias, dados de distribuidoras, cálculo parametrizável de custo por kWh e estimativas de economia. |
 | IBGE Localidades API | Padronizar cidade, UF e região para cadastro e expansão futura. |
 
 Decisão técnica desta frente:
 
 > O MVP deve usar importação de dados disponíveis do SEMS/Sense Plus sem assumir que a versão web já entrega sessões de carregador/RFID. O sistema deve manter adaptadores para dados agregados da planta, relatórios reais de sessão quando confirmados, API GoodWe futura, Modbus validado ou outras fontes.
+
+Também deve ficar explícito que a identificação do usuário depende do modo de liberação da carga:
+
+| Modo de liberação | O que permite concluir |
+| --- | --- |
+| RFID cadastrado | Pode indicar qual cartão autorizou a carga, desde que o relatório/app exponha essa informação. |
+| Start pelo app | Pode indicar o usuário operacional que iniciou a carga, desde que o acesso esteja individualizado. |
+| Modo automático | Não identifica a pessoa sozinho; exige conciliação externa, como reserva, cadastro manual, QR Code ou regra de uso. |
 
 ## Frente 3 - Arquitetura e IA
 
@@ -129,8 +141,8 @@ A Frente 3 define a solução em quatro camadas:
 | --- | --- |
 | Física | Carregador GoodWe, veículo, RFID, rede elétrica e smart meter futuro. |
 | Conectividade | SEMS/Sense Plus, Solar Go, Wi-Fi, LAN, Modbus e exportação de relatórios quando disponível. |
-| Aplicação | Importador, banco de dados, motor de rateio, IA e auditoria. |
-| Apresentação | Painel do gestor, fatura do usuário, alertas e recomendações. |
+| Aplicação | Importador, banco de dados, motor de rateio, motor de recomendações energéticas, IA e auditoria. |
+| Apresentação | Painel do gestor, fatura do usuário, alertas e recomendações de economia. |
 
 **Aprofundamentos escolhidos:** Opção B - Papel da IA e Opção C - Esquema da base de dados. Também foi incluído benchmark de modelos de rateio para fortalecer a decisão.
 
@@ -138,7 +150,7 @@ A Frente 3 define a solução em quatro camadas:
 
 ![Arquitetura proposta do EV ChargeOps](assets/diagrams/arquitetura-ev-chargeops.svg)
 
-## Fluxo da Sessão até a Fatura
+## Fluxo da Sessão até a Governança Energética
 
 1. Usuário conecta o veículo e inicia a recarga.
 2. Carregador GoodWe registra energia, duração, potência, status e eventos.
@@ -148,7 +160,8 @@ A Frente 3 define a solução em quatro camadas:
 6. O sistema normaliza campos, associa RFID a usuário/unidade quando esse dado existir e valida inconsistências.
 7. Regras e IA sinalizam sessões suspeitas ou lacunas de dados.
 8. Motor de rateio calcula consumo individual, custos comuns, ociosidade e ajustes quando houver base de sessão validada.
-9. Gestor recebe painel mensal e usuário recebe fatura explicada.
+9. Motor de recomendações cruza recarga, energia da planta, tarifa e horários para sugerir economia.
+10. Gestor recebe painel mensal, usuário recebe fatura explicada e o local recebe recomendações de redução de gasto.
 
 ## Modelo de Rateio
 
@@ -190,19 +203,23 @@ Casos excepcionais:
 
 ## Papel da IA
 
-A IA é estrutural porque atua antes e depois do rateio:
+A IA é estrutural porque atua antes, durante e depois do rateio. Ela não deve ser apresentada como um chatbot genérico, mas como uma camada de apoio à decisão energética:
 
 | Abordagem | Problema que resolve | Dados necessários | Impacto esperado |
 | --- | --- | --- | --- |
 | Previsão de consumo e pico | Gestor não sabe quando haverá maior demanda. | Data, hora, kWh, duração, potência, usuário e status. | Planejar expansão, agenda e controle de demanda. |
 | Detecção de anomalias | Sessões podem ter erro, falha ou comportamento fora do padrão. | kWh, duração, potência média, RFID, status e histórico. | Evitar cobrança errada e acionar revisão. |
 | Agrupamento de perfis | Usuários têm padrões de uso diferentes. | Consumo mensal, frequência, duração média e horário preferido. | Criar regras, comunicação e planos mais justos. |
+| Recomendação de economia | O local pode estar carregando em horários caros ou desperdiçando geração solar. | Dados SEMS de planta, geração, consumo, rede, bateria, sessões e tarifa estimada. | Sugerir janelas de recarga, redução de pico, uso solar e estudo preliminar de placas solares. |
+
+As recomendações sobre placas solares devem ser tratadas como **pré-viabilidade**. O EV ChargeOps pode indicar que há sinais de oportunidade, mas a decisão exige projeto técnico, área disponível, irradiação, orçamento, regras da distribuidora e validação de engenharia.
 
 Técnicas sugeridas para Sprint 2:
 
 - regressão linear ou estatística simples para previsão inicial;
 - `IsolationForest` ou regras determinísticas para anomalias;
-- `KMeans` para perfis de uso quando houver histórico suficiente.
+- `KMeans` para perfis de uso quando houver histórico suficiente;
+- regras de recomendação e score de economia para comparar recarga em horário de pico, recarga com geração solar e necessidade de expansão.
 
 ## Esquema de Dados
 
@@ -217,6 +234,8 @@ Entidades principais:
 - `sessao_recarga`
 - `tarifa`
 - `regra_rateio`
+- `snapshot_energia_planta`
+- `recomendacao_energia`
 - `fatura`
 - `item_fatura`
 - `alerta_ia`
@@ -226,8 +245,10 @@ Dados simulados para orientar a Sprint 2:
 
 - `data/exemplo-sessoes-sense-plus.csv`
 - `data/dicionario-campos-sessoes.csv`
+- `data/exemplo-energia-sems.csv`
+- `data/dicionario-campos-energia.csv`
 
-Esses arquivos não representam dados reais da FIAP. Eles servem para desenvolver e testar importação, validação, rateio e IA sem expor dados operacionais.
+Esses arquivos não representam dados reais da FIAP. Eles servem para desenvolver e testar importação, validação, rateio, IA e recomendações de economia sem expor dados operacionais.
 
 ## Plano da Sprint 2
 
@@ -236,9 +257,10 @@ Esses arquivos não representam dados reais da FIAP. Eles servem para desenvolve
 | 1 | Modelagem do domínio | Python, Pydantic ou dataclasses, SQLite/PostgreSQL | Entidades e relacionamentos implementados. |
 | 2 | Importador de relatórios | Python, pandas, openpyxl, leitura CSV inicial | Dados SEMS de planta e sessões simuladas carregados; sessões reais integradas quando a exportação for confirmada. |
 | 3 | Motor de rateio | Python, pytest | Faturas calculadas com testes de exceção. |
-| 4 | Painel mínimo | Streamlit ou FastAPI + front-end simples | Gestor visualiza sessões, rateio e alertas. |
-| 5 | IA operacional | scikit-learn, pandas | Previsão, anomalia e perfis demonstráveis. |
-| 6 | Evidência e pitch | README, prints, vídeo de 3 minutos | Fluxo completo demonstrado para avaliação. |
+| 4 | Motor de economia energética | Python, pandas, regras e estatística simples | Recomendações sobre horários, pico, uso solar e pré-viabilidade fotovoltaica. |
+| 5 | Painel mínimo | Streamlit ou FastAPI + front-end simples | Gestor visualiza sessões, rateio, alertas e recomendações de economia. |
+| 6 | IA energética e operacional | scikit-learn, pandas | Previsão, anomalia, perfis e score de oportunidade energética demonstráveis. |
+| 7 | Evidência e pitch | README, prints, vídeo de 3 minutos | Fluxo completo demonstrado para avaliação. |
 
 ## Forma de Entrega
 
@@ -260,7 +282,9 @@ enterprise-challenge-goodwe/
       fluxo-sessao-recarga.svg
   data/
     benchmark-solucoes-recarga.csv
+    dicionario-campos-energia.csv
     dicionario-campos-sessoes.csv
+    exemplo-energia-sems.csv
     exemplo-sessoes-sense-plus.csv
   docs/
     pesquisa/

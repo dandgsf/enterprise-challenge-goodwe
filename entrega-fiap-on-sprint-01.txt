@@ -1,0 +1,13 @@
+Enterprise Challenge 2026 - GoodWe + FIAP
+Sprint 01 - Pesquisa e documentação
+
+Equipe 01
+Danilo Gustavo da Silva Fernandes - RM570057
+Renan Mano Otero - RM573615
+Beatriz Marques Souza - RM571819
+
+Link do repositório do grupo:
+https://github.com/dandgsf/enterprise-challenge-goodwe
+
+Observação:
+O README.md é o documento central da entrega e contém as três frentes de pesquisa, arquitetura da solução, modelo de rateio, papel da IA, fontes consultadas e plano para a Sprint 02.

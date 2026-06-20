@@ -13,11 +13,11 @@ Uso no projeto:
 - Confirmação de que o README é o entregável central do repositório.
 - Identificação do termo EV ChargeOps como nome conceitual da solução no enunciado.
 - Critérios exigidos para as três frentes.
-- Recorte real do desafio: carregador GW7K HC20/HCA G2, 7 kW, Sense Plus, ausência de API pública liberada nesta etapa, comunicação Modbus, ausência de OCPP, limite de RFID e necessidade de trabalhar com relatórios exportados.
+- Recorte real do desafio: carregador GW7K HC20/HCA G2, 7 kW, Sense Plus, ausência de API pública liberada nesta etapa, comunicação Modbus, ausência de OCPP, limite de RFID, necessidade de trabalhar com relatórios exportados quando disponíveis e oportunidade de usar dados energéticos do SEMS para recomendações de economia.
 
 Observação sênior:
 
-- O enunciado pede estudo de API GoodWe/SEMS, mas a mentoria esclareceu que a API para carregadores não estará disponível para os alunos nesta etapa. Por isso, a documentação trata API como evolução futura e define importação de relatórios como MVP.
+- O enunciado pede estudo de API GoodWe/SEMS, mas a mentoria esclareceu que a API para carregadores não estará disponível para os alunos nesta etapa. Por isso, a documentação trata API como evolução futura e define importação de dados disponíveis, rateio auditável e recomendações energéticas como MVP.
 
 ## Mercado Brasileiro de Eletromobilidade
 
@@ -50,7 +50,7 @@ Uso no projeto:
 
 - A página do Sense Plus foi usada como referência de plataforma indicada pelo enunciado.
 - As informações específicas sobre modelo GW7K HC20/HCA G2, 7 kW, app Sense Plus, Solar Go, Modbus, RFID e ausência de API liberada foram extraídas da mentoria, não inferidas de página pública.
-- A inspeção visual do SEMS Portal mostrou dados agregados de planta, geração, renda, curvas de potência, estatísticas energéticas, tela de relatórios por inversor/indicador e telas de gerenciamento. Não foi observada, nessa navegação, tela web explícita de sessões do carregador por RFID/usuário.
+- A inspeção visual do SEMS Portal mostrou dados agregados de planta, geração, renda, curvas de potência, estatísticas energéticas, tela de relatórios por inversor/indicador e telas de gerenciamento. Não foi observada, nessa navegação, tela web explícita de sessões do carregador por RFID/usuário. Esses dados agregados foram usados para justificar a camada de IA voltada à economia energética.
 
 Observação:
 
@@ -103,7 +103,7 @@ Uso no projeto:
 
 - Benchmark da Frente 1 - Opção A.
 - Identificação de funcionalidades já existentes: cobrança por recarga, controle de acesso, relatórios, status em tempo real, balanceamento de carga, histórico de sessões e monitoramento de energia.
-- Identificação de lacunas que o EV ChargeOps pode explorar: rateio auditável, importação de dados disponíveis do SEMS/Sense Plus, relatórios de sessão quando confirmados, IA operacional e foco em gestão compartilhada brasileira.
+- Identificação de lacunas que o EV ChargeOps pode explorar: rateio auditável, importação de dados disponíveis do SEMS/Sense Plus, relatórios de sessão quando confirmados, IA energética e operacional, recomendação de economia energética e foco em gestão compartilhada brasileira.
 
 ## IA e Modelagem
 
@@ -114,7 +114,7 @@ Uso no projeto:
 Uso no projeto:
 
 - Apoio à Frente 3 - Opção B.
-- Justificativa técnica para previsão de consumo, detecção de anomalias e agrupamento de perfis de uso.
+- Justificativa técnica para previsão de consumo, detecção de anomalias, agrupamento de perfis de uso e score de oportunidade energética.
 
 ## Observações da Mentoria que Afetam o MVP
 
@@ -125,4 +125,4 @@ Uso no projeto:
 - Identificação: suporte a cartões RFID, com limite nativo de até 10 cartões.
 - Comunicação: Modbus; não há OCPP no carregador citado.
 - Cobrança: não há cobrança automática integrada no equipamento atual.
-- Direcionamento de solução: rateio/cobrança e gestão compartilhada são dores reais; controle de demanda também é relevante, mas depende mais de medidor, configuração e validação técnica.
+- Direcionamento de solução: rateio/cobrança e gestão compartilhada são dores reais; controle de demanda também é relevante, mas depende mais de medidor, configuração e validação técnica. A camada de IA deve recomendar economia, melhor horário de recarga, redução de pico e pré-viabilidade solar sem substituir projeto técnico.

@@ -1,0 +1,5 @@
+snapshot_id,plant_id,recorded_at,pv_power_kw,load_power_kw,grid_power_kw,battery_power_kw,pv_generation_kwh,load_consumption_kwh,grid_consumption_kwh,feed_in_kwh,estimated_tariff_brl_kwh,recommendation_type,recommendation_summary,review_required
+ENE-2026-06-001,LAB-FIAP-ECO-SMART,2026-06-03 12:00:00,4.80,2.10,-1.40,0.00,18.60,7.20,1.10,5.40,0.92,uso_solar,"Priorizar recargas entre 11h e 15h quando houver geração fotovoltaica excedente.",sim
+ENE-2026-06-002,LAB-FIAP-ECO-SMART,2026-06-03 19:00:00,0.00,6.70,6.70,0.00,18.60,18.40,9.20,5.40,0.92,reducao_pico,"Evitar concentração de recargas no início da noite; sugerir agendamento escalonado.",sim
+ENE-2026-06-003,LAB-FIAP-ECO-SMART,2026-06-04 10:00:00,3.20,1.80,-0.60,0.00,9.80,4.10,0.80,2.20,0.92,pre_viabilidade_solar,"Há indício de oportunidade para estudar expansão fotovoltaica, mas a decisão exige projeto técnico.",sim
+ENE-2026-06-004,LAB-FIAP-ECO-SMART,2026-06-05 08:00:00,1.10,4.90,3.80,0.00,2.30,5.80,3.90,0.00,0.92,ajuste_horario,"Deslocar parte das recargas matinais para período de maior geração solar.",sim

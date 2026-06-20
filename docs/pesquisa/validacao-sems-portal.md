@@ -4,7 +4,7 @@
 
 Este documento registra a inspeção visual feita no **SEMS Portal/Sense Plus web** em 20/06/2026, usando a aba aberta no Comet Browser. O objetivo foi verificar quais dados aparecem de fato na plataforma antes de prometer uma integração ou relatório que talvez não exista no acesso disponível ao grupo.
 
-Essa validação não substitui documentação oficial da GoodWe nem o teste com exportações reais, mas ajuda a deixar a proposta tecnicamente honesta.
+Essa validação não substitui documentação oficial da GoodWe nem o teste com exportações reais, mas ajuda a deixar a proposta tecnicamente honesta. Ela também mostra um caminho forte para a solução: usar os dados energéticos da planta como base para recomendações de economia, mesmo enquanto as sessões por usuário/RFID ainda precisam ser confirmadas.
 
 ## Ambiente Observado
 
@@ -140,6 +140,14 @@ Isso significa que a solução não deve prometer que o SEMS web, sozinho, entre
 2. **Cenário a confirmar:** exportação de sessões do carregador pelo Sense Plus app, por relatório específico do carregador ou por acesso liberado pela GoodWe/FIAP.
 3. **Cenário de prototipação:** uso de dataset simulado com estrutura esperada de sessão para implementar e testar rateio, IA e auditoria até que os relatórios reais sejam disponibilizados.
 
+Para a proposta atualizada do EV ChargeOps, o primeiro cenário deixa de ser apenas "contexto". Ele passa a ser um insumo direto da solução, porque permite analisar:
+
+- horários com maior uso da rede;
+- relação entre geração fotovoltaica e consumo;
+- momentos em que a recarga poderia ser deslocada;
+- indícios de pico recorrente;
+- oportunidade preliminar de estudar placas solares, bateria, smart meter ou novas regras de uso.
+
 ## Impacto na Solução
 
 O EV ChargeOps continua fazendo sentido, mas a arquitetura precisa ser mais precisa:
@@ -149,6 +157,7 @@ O EV ChargeOps continua fazendo sentido, mas a arquitetura precisa ser mais prec
 - criar adaptadores separados para `sems_energia_planta` e `sessoes_recarga`;
 - manter dataset simulado para a Sprint 2;
 - validar exportações reais antes de afirmar suporte a CSV/PDF/Excel de sessão;
-- usar os dados energéticos agregados do SEMS como contexto para IA, demanda e comparação, não como base única do rateio por usuário.
+- usar os dados energéticos agregados do SEMS como base para IA de economia, demanda e comparação, não como base única do rateio por usuário;
+- tratar recomendações sobre placas solares como pré-viabilidade, nunca como projeto técnico fechado.
 
 Essa postura evita uma falsa solução e torna o projeto mais forte perante avaliação técnica.
