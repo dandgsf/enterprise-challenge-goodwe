@@ -8,11 +8,31 @@ O objetivo desta sprint é pesquisar, documentar e propor a base da solução **
 
 **Equipe 01**
 
-| Integrante | RM | E-mail |
-| --- | --- | --- |
-| Danilo Gustavo da Silva Fernandes | RM570057 | rm570057@fiap.com.br |
-| Renan Mano Otero | RM573615 |
-| Beatriz Marques Souza | RM571819 |
+<table>
+  <thead>
+    <tr>
+      <th>Integrante</th>
+      <th>RM</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Danilo Gustavo da Silva Fernandes</td>
+      <td>RM570057</td>
+    </tr>
+    <tr>
+      <td>Renan Mano Otero</td>
+      <td>RM573615</td>
+    </tr>
+    <tr>
+      <td>Beatriz Marques Souza</td>
+      <td>RM571819</td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center"><strong>E-mail da equipe:</strong> rm570057@fiap.com.br</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Resumo da Solução
 
