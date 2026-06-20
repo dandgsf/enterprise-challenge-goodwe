@@ -24,7 +24,7 @@
   <text x="54" y="80" fill="#526064" font-family="Arial, sans-serif" font-size="15">MVP orientado a relatórios do Sense Plus, com adaptadores para API futura e integração técnica validada.</text>
 
   <rect class="layer" x="44" y="115" width="270" height="575" rx="12"/>
-  <text class="layer-title" x="68" y="150">1. Fisica</text>
+  <text class="layer-title" x="68" y="150">1. Física</text>
 
   <rect class="box" x="68" y="180" width="220" height="72"/>
   <text class="label" x="88" y="210">Veículo elétrico</text>
@@ -52,7 +52,7 @@
   <text class="small" x="398" y="242">web/app monitoramento</text>
 
   <rect class="box" x="378" y="305" width="220" height="80"/>
-  <text class="label" x="398" y="338">Relatorios</text>
+  <text class="label" x="398" y="338">Relatórios</text>
   <text class="small" x="398" y="360">CSV, Excel ou PDF</text>
 
   <rect class="box" x="378" y="420" width="220" height="80"/>
@@ -64,7 +64,7 @@
   <text class="small" x="398" y="590">integração futura validada</text>
 
   <rect class="layer" x="664" y="115" width="315" height="575" rx="12"/>
-  <text class="layer-title" x="688" y="150">3. Aplicacao</text>
+  <text class="layer-title" x="688" y="150">3. Aplicação</text>
 
   <rect class="box" x="688" y="178" width="250" height="74"/>
   <text class="label" x="708" y="210">Importador</text>
@@ -86,19 +86,19 @@
   <text class="label" x="708" y="648">Auditoria</text>
 
   <rect class="layer" x="1019" y="115" width="217" height="575" rx="12"/>
-  <text class="layer-title" x="1043" y="150">4. Apresentacao</text>
+  <text class="layer-title" x="1043" y="150">4. Apresentação</text>
 
   <rect class="box" x="1043" y="205" width="168" height="86"/>
   <text class="label" x="1063" y="238">Gestor</text>
   <text class="small" x="1063" y="262">painel mensal</text>
 
   <rect class="box" x="1043" y="335" width="168" height="86"/>
-  <text class="label" x="1063" y="368">Usuario</text>
+  <text class="label" x="1063" y="368">Usuário</text>
   <text class="small" x="1063" y="392">fatura explicada</text>
 
   <rect class="box-alt" x="1043" y="465" width="168" height="86"/>
   <text class="label" x="1063" y="498">Alertas</text>
-  <text class="small" x="1063" y="522">decisao e revisao</text>
+  <text class="small" x="1063" y="522">decisão e revisão</text>
 
   <path class="arrow" d="M288 326 H378"/>
   <path class="arrow" d="M598 228 H688"/>

@@ -9,16 +9,16 @@ flowchart LR
   subgraph Conectividade["Camada de conectividade"]
     SENSE["Sense Plus\nweb/app"]
     SOLAR["Solar Go\ncomissionamento local"]
-    MODBUS["Modbus RS-485\nintegracao futura validada"]
-    EXPORT["Relatorios\nCSV Excel PDF"]
+    MODBUS["Modbus RS-485\nintegração futura validada"]
+    EXPORT["Relatórios\nCSV Excel PDF"]
   end
 
   subgraph Aplicacao["Camada de aplicação"]
     IMPORT["Importador e normalizador"]
-    DB["Banco EV ChargeOps\nsessoes usuarios faturas"]
+    DB["Banco EV ChargeOps\nsessões usuários faturas"]
     RATEIO["Motor de rateio"]
     AI["IA operacional\nprevisão anomalia perfis"]
-    AUDIT["Auditoria e revisao manual"]
+    AUDIT["Auditoria e revisão manual"]
   end
 
   subgraph Interfaces["Camada de apresentação"]
