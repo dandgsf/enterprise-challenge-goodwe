@@ -67,7 +67,7 @@ def test_real_app_starts_with_useful_default_data() -> None:
     app = AppTest.from_file(str(PROJECT_ROOT / "app.py"), default_timeout=20).run()
 
     assert not app.exception
-    assert app.title[0].value == "EV ChargeOps"
+    assert app.header[0].value == "EV ChargeOps"
     assert len(app.tabs) == 4
     values = {metric.value for metric in app.metric}
     assert {"10", "7", "3", "86,10 kWh", "R$ 159,21"} <= values
@@ -102,8 +102,8 @@ def test_uploaded_sources_are_not_labeled_as_simulated() -> None:
         energy_filename="energia-upload.csv",
     )
 
-    assert "upload nao persistido" in view.sessions_source
-    assert "upload nao persistido" in view.energy_source
+    assert "upload não persistido" in view.sessions_source
+    assert "upload não persistido" in view.energy_source
     assert any("Dados enviados por upload" in notice.message for notice in view.notices)
 
 

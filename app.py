@@ -14,7 +14,7 @@ def process_sources(
     tariff: Decimal,
     common_cost: Decimal,
 ) -> DashboardViewModel:
-    """Processa uploads pareados ou recarrega os dados simulados incluidos."""
+    """Processa uploads pareados ou recarrega os dados simulados incluídos."""
 
     if sessions_upload is None and energy_upload is None:
         return build_dashboard_view(

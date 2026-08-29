@@ -1,4 +1,4 @@
-"""Composicao do dominio em um ViewModel imutavel para o Streamlit."""
+"""Composição do domínio em um ViewModel imutável para o Streamlit."""
 
 from __future__ import annotations
 
@@ -78,7 +78,7 @@ def build_dashboard_view(
             energy=format_kwh(invoice.total_kwh),
             energy_cost=format_brl(invoice.energy_cost),
             common_cost=format_brl(invoice.common_cost),
-            idle_cost=format_brl(invoice.idle_cost) if invoice.idle_cost else "Nao calculada",
+            idle_cost=format_brl(invoice.idle_cost) if invoice.idle_cost else "Não calculada",
             total=format_brl(invoice.total),
         )
         for invoice in billing.invoices
@@ -101,7 +101,7 @@ def build_dashboard_view(
 
     return DashboardViewModel(
         title="EV ChargeOps",
-        subtitle="Governanca auditavel para recarga compartilhada",
+        subtitle="Governança auditável para recarga compartilhada",
         generated_at=format_datetime_pt_br(generated_at),
         sessions_source=_source_label(
             session_import.filename, session_import.file_hash, simulated=sessions_are_demo
@@ -112,24 +112,24 @@ def build_dashboard_view(
         reference_period=_reference_period(session_import.records),
         overview_metrics=(
             MetricViewModel(
-                "Sessoes importadas",
+                "Sessões importadas",
                 str(summary.imported_sessions),
-                "Linhas recebidas no arquivo de sessoes.",
+                "Linhas recebidas no arquivo de sessões.",
             ),
             MetricViewModel(
-                "Faturaveis",
+                "Faturáveis",
                 str(summary.billable_sessions),
-                "Sessoes aprovadas pelas regras deterministicas.",
+                "Sessões aprovadas pelas regras determinísticas.",
             ),
             MetricViewModel(
-                "Em revisao",
+                "Em revisão",
                 str(summary.blocked_sessions),
-                "Sessoes protegidas de cobranca automatica.",
+                "Sessões protegidas de cobrança automática.",
             ),
             MetricViewModel(
-                "Energia faturavel",
+                "Energia faturável",
                 format_kwh(summary.billable_kwh),
-                "Energia presente nas faturas do periodo.",
+                "Energia presente nas faturas do período.",
             ),
             MetricViewModel(
                 "Total do rateio",
@@ -139,9 +139,9 @@ def build_dashboard_view(
         ),
         reconciliation=(
             KeyValueViewModel("Energia importada", format_kwh(summary.imported_kwh)),
-            KeyValueViewModel("Energia faturavel", format_kwh(summary.billable_kwh)),
-            KeyValueViewModel("Energia em revisao", format_kwh(summary.blocked_kwh)),
-            KeyValueViewModel("Custo variavel", format_brl(summary.variable_total)),
+            KeyValueViewModel("Energia faturável", format_kwh(summary.billable_kwh)),
+            KeyValueViewModel("Energia em revisão", format_kwh(summary.blocked_kwh)),
+            KeyValueViewModel("Custo variável", format_brl(summary.variable_total)),
             KeyValueViewModel("Custo comum", format_brl(summary.common_total)),
             KeyValueViewModel("Total", format_brl(summary.grand_total)),
         ),
@@ -154,18 +154,18 @@ def build_dashboard_view(
         notices=(
             NoticeViewModel(
                 (
-                    "Dados simulados: esta demonstracao nao representa uma planta real."
+                    "Dados simulados: esta demonstração não representa uma planta real."
                     if uses_demo_sources
                     else "Dados enviados por upload: valide a origem antes de qualquer uso real."
                 ),
                 "warning",
             ),
             NoticeViewModel(
-                "A API GoodWe/SEMS nao esta disponivel; o MVP usa adaptadores CSV.",
+                "A API GoodWe/SEMS não está disponível; o MVP usa adaptadores CSV.",
                 "info",
             ),
             NoticeViewModel(
-                "A IA apenas prioriza revisao; regras auditaveis decidem o faturamento.",
+                "A IA apenas prioriza revisão; regras auditáveis decidem o faturamento.",
                 "info",
             ),
         ),
@@ -194,16 +194,16 @@ def _session_row(
     anomaly = anomaly_by_session.get(session.session_id)
     return SessionRowViewModel(
         session_id=session.session_id,
-        unit_id=session.unit_id or "Sem vinculo",
+        unit_id=session.unit_id or "Sem vínculo",
         started_at=format_datetime_pt_br(session.start_at),
         duration=f"{session.duration_min} min",
         energy=format_kwh(session.energy_kwh),
-        status="Em revisao" if blocked else "Concluida",
+        status="Em revisão" if blocked else "Concluída",
         status_key="review" if blocked else "completed",
         billing_decision="Bloquear" if blocked else "Faturar",
         alert=" | ".join(messages) if messages else "Sem bloqueios determinísticos",
         anomaly=(
-            "Prioridade experimental para revisao"
+            "Prioridade experimental para revisão"
             if anomaly is not None and anomaly.is_anomaly
             else "Sem sinal experimental"
         ),
@@ -226,14 +226,14 @@ def _recommendation_view(recommendation: Recommendation) -> RecommendationViewMo
         "uso_solar": "Priorizar excedente solar",
         "reducao_pico": "Reduzir pico noturno",
         "ajuste_horario": "Ajustar janela de recarga",
-        "pre_viabilidade_solar": "Dados insuficientes para pre-viabilidade",
+        "pre_viabilidade_solar": "Dados insuficientes para pré-viabilidade",
     }
     return RecommendationViewModel(
-        title=titles.get(recommendation.recommendation_type, "Recomendacao energetica"),
+        title=titles.get(recommendation.recommendation_type, "Recomendação energética"),
         message=recommendation.message,
         evidence=recommendation.evidence,
         assumptions=recommendation.assumptions,
-        priority="Revisao humana obrigatoria",
+        priority="Revisão humana obrigatória",
     )
 
 
@@ -244,14 +244,14 @@ def _energy_metrics(snapshots: Sequence[Any]) -> tuple[MetricViewModel, ...]:
     peak_load = max(snapshot.load_power_kw for snapshot in snapshots)
     peak_grid = max(snapshot.grid_power_kw for snapshot in snapshots)
     return (
-        MetricViewModel("Pico solar", f"{peak_solar:.2f} kW", "Maior potencia FV observada."),
+        MetricViewModel("Pico solar", f"{peak_solar:.2f} kW", "Maior potência FV observada."),
         MetricViewModel("Pico de carga", f"{peak_load:.2f} kW", "Maior carga observada."),
-        MetricViewModel("Pico de rede", f"{peak_grid:.2f} kW", "Maior importacao da rede."),
+        MetricViewModel("Pico de rede", f"{peak_grid:.2f} kW", "Maior importação da rede."),
     )
 
 
 def _source_label(filename: str, file_hash: str, *, simulated: bool) -> str:
-    provenance = "simulado" if simulated else "upload nao persistido"
+    provenance = "simulado" if simulated else "upload não persistido"
     return f"{filename} ({provenance}, SHA-256 {file_hash[:12]}...)"
 
 
@@ -264,12 +264,12 @@ def _is_default_source(source: Source, expected: Path) -> bool:
 def _reference_period(sessions: Sequence[Session]) -> str:
     months = sorted({(item.start_at.year, item.start_at.month) for item in sessions})
     if len(months) != 1:
-        return "Periodos mistos"
+        return "Períodos mistos"
     year, month = months[0]
     month_names = (
         "janeiro",
         "fevereiro",
-        "marco",
+        "março",
         "abril",
         "maio",
         "junho",

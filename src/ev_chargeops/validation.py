@@ -1,4 +1,4 @@
-"""Regras deterministicas de validacao e elegibilidade de sessoes."""
+"""Regras determinísticas de validação e elegibilidade de sessões."""
 
 from __future__ import annotations
 
@@ -34,20 +34,20 @@ def validate_sessions(
     *,
     prior_issues: Iterable[ValidationIssue] = (),
 ) -> list[ValidationIssue]:
-    """Valida sessoes sem permitir que alertas de IA decidam faturamento."""
+    """Valida sessões sem permitir que alertas de IA decidam faturamento."""
 
     issues = list(prior_issues)
     id_counts = Counter(session.session_id for session in sessions)
 
     for session in sessions:
         if not session.session_id.strip():
-            issues.append(_issue(session, "missing_session_id", "ID da sessao ausente."))
+            issues.append(_issue(session, "missing_session_id", "ID da sessão ausente."))
         elif id_counts[session.session_id] > 1:
             issues.append(
                 _issue(
                     session,
                     "duplicate_session_id",
-                    "ID de sessao duplicado; todas as ocorrencias foram bloqueadas.",
+                    "ID de sessão duplicado; todas as ocorrências foram bloqueadas.",
                     field="session_id",
                 )
             )
@@ -57,7 +57,7 @@ def validate_sessions(
                 _issue(
                     session,
                     "missing_charger",
-                    "Carregador ou modelo nao identificado.",
+                    "Carregador ou modelo não identificado.",
                     field="charger_id",
                 )
             )
@@ -66,7 +66,7 @@ def validate_sessions(
                 _issue(
                     session,
                     "missing_user_or_unit",
-                    "Usuario e unidade precisam estar vinculados para faturamento.",
+                    "Usuário e unidade precisam estar vinculados para faturamento.",
                     field="user_id",
                 )
             )
@@ -75,7 +75,7 @@ def validate_sessions(
                 _issue(
                     session,
                     "invalid_date_range",
-                    "Termino da sessao anterior ao inicio.",
+                    "Término da sessão anterior ao início.",
                     field="end_at",
                 )
             )
@@ -84,7 +84,7 @@ def validate_sessions(
                 _issue(
                     session,
                     "negative_measurement",
-                    "Duracao e energia nao podem ser negativas.",
+                    "Duração e energia não podem ser negativas.",
                 )
             )
         if session.energy_kwh == Decimal("0"):
@@ -92,7 +92,7 @@ def validate_sessions(
                 _issue(
                     session,
                     "zero_energy",
-                    "Sessao sem energia entregue nao pode ser faturada.",
+                    "Sessão sem energia entregue não pode ser faturada.",
                     field="energy_kwh",
                 )
             )
@@ -101,7 +101,7 @@ def validate_sessions(
                 _issue(
                     session,
                     "non_completed_status",
-                    f"Status {session.session_status!r} nao e faturavel.",
+                    f"Status {session.session_status!r} não é faturável.",
                     field="session_status",
                 )
             )
@@ -110,7 +110,7 @@ def validate_sessions(
                 _issue(
                     session,
                     "manual_review_required",
-                    session.review_reason or "Sessao marcada para revisao humana.",
+                    session.review_reason or "Sessão marcada para revisão humana.",
                     field="review_flag",
                 )
             )
@@ -119,7 +119,7 @@ def validate_sessions(
 
 
 def blocked_session_ids(issues: Iterable[ValidationIssue]) -> set[str]:
-    """Retorna IDs bloqueados somente por regras deterministicas."""
+    """Retorna IDs bloqueados somente por regras determinísticas."""
 
     return {
         issue.session_id
@@ -129,6 +129,6 @@ def blocked_session_ids(issues: Iterable[ValidationIssue]) -> set[str]:
 
 
 def is_session_billable(session: Session, issues: Iterable[ValidationIssue]) -> bool:
-    """Informa elegibilidade de uma sessao a partir das ocorrencias rastreaveis."""
+    """Informa elegibilidade de uma sessão a partir das ocorrências rastreáveis."""
 
     return session.session_id not in blocked_session_ids(issues)

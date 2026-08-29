@@ -1,4 +1,4 @@
-"""Importadores seguros e auditaveis para os CSVs do MVP."""
+"""Importadores seguros e auditáveis para os CSVs do MVP."""
 
 from __future__ import annotations
 
@@ -82,7 +82,7 @@ def _strip_accents(value: str) -> str:
 
 
 def normalize_optional_text(value: Any) -> str | None:
-    """Converte campos vazios do CSV em ``None`` e remove espacos externos."""
+    """Converte campos vazios do CSV em ``None`` e remove espaços externos."""
 
     if value is None or pd.isna(value):
         return None
@@ -91,7 +91,7 @@ def normalize_optional_text(value: Any) -> str | None:
 
 
 def normalize_boolean(value: Any) -> bool:
-    """Normaliza variantes portuguesas e inglesas de sim/nao."""
+    """Normaliza variantes portuguesas e inglesas de sim/não."""
 
     text = normalize_optional_text(value)
     if text is None:
@@ -101,7 +101,7 @@ def normalize_boolean(value: Any) -> bool:
         return True
     if token in {"nao", "n", "false", "0", "no"}:
         return False
-    raise ValueError(f"valor booleano invalido: {text!r}")
+    raise ValueError(f"valor booleano inválido: {text!r}")
 
 
 def normalize_session_status(value: Any) -> str:
@@ -109,7 +109,7 @@ def normalize_session_status(value: Any) -> str:
 
     text = normalize_optional_text(value)
     if text is None:
-        raise ValueError("status da sessao ausente")
+        raise ValueError("status da sessão ausente")
     token = _strip_accents(text).casefold().replace(" ", "_")
     aliases = {
         "concluida": "completed",
@@ -137,7 +137,7 @@ def _read_source(source: bytes | bytearray | memoryview | str | Path) -> tuple[b
     else:
         path = Path(source)
         if not path.is_file():
-            raise CsvImportError(f"arquivo CSV nao encontrado: {path}")
+            raise CsvImportError(f"arquivo CSV não encontrado: {path}")
         payload = path.read_bytes()
         filename = path.name
 
@@ -171,14 +171,14 @@ def _read_frame(payload: bytes) -> pd.DataFrame:
         duplicates = sorted(set(frame.columns[frame.columns.duplicated()].tolist()))
         raise CsvImportError(f"cabecalho contem colunas duplicadas: {', '.join(duplicates)}")
     if frame.empty:
-        raise CsvImportError("arquivo CSV nao contem linhas de dados")
+        raise CsvImportError("arquivo CSV não contém linhas de dados")
     return frame
 
 
 def _require_columns(frame: pd.DataFrame, required: frozenset[str]) -> None:
     missing = sorted(required.difference(frame.columns))
     if missing:
-        raise CsvImportError(f"colunas obrigatorias ausentes: {', '.join(missing)}")
+        raise CsvImportError(f"colunas obrigatórias ausentes: {', '.join(missing)}")
 
 
 def _decimal(value: Any, *, required: bool = True) -> Decimal | None:
@@ -190,7 +190,7 @@ def _decimal(value: Any, *, required: bool = True) -> Decimal | None:
     try:
         result = Decimal(text.replace(",", "."))
     except InvalidOperation as exc:
-        raise ValueError(f"valor decimal invalido: {text!r}") from exc
+        raise ValueError(f"valor decimal inválido: {text!r}") from exc
     if not result.is_finite():
         raise ValueError(f"valor decimal deve ser finito: {text!r}")
     return result
@@ -205,7 +205,7 @@ def _integer(value: Any, *, required: bool = True) -> int | None:
     try:
         return int(text)
     except ValueError as exc:
-        raise ValueError(f"valor inteiro invalido: {text!r}") from exc
+        raise ValueError(f"valor inteiro inválido: {text!r}") from exc
 
 
 def _datetime(value: Any) -> datetime:
@@ -215,14 +215,14 @@ def _datetime(value: Any) -> datetime:
     try:
         return datetime.fromisoformat(text)
     except ValueError as exc:
-        raise ValueError(f"data/hora invalida: {text!r}") from exc
+        raise ValueError(f"data/hora inválida: {text!r}") from exc
 
 
 def _parse_session(row: dict[str, Any], source_row: int) -> Session:
     start_at = _datetime(row["start_at"])
     end_at = _datetime(row["end_at"])
     if end_at < start_at:
-        raise ValueError("termino da sessao anterior ao inicio")
+        raise ValueError("término da sessão anterior ao início")
     return Session(
         session_id=normalize_optional_text(row["session_id"]) or "",
         charger_id=normalize_optional_text(row["charger_id"]) or "",
@@ -320,7 +320,7 @@ def import_sessions_csv(
     *,
     filename: str | None = None,
 ) -> ImportResult[Session]:
-    """Importa sessoes de um caminho ou de bytes, sem persistir uploads."""
+    """Importa sessões de um caminho ou de bytes, sem persistir uploads."""
 
     return _import_records(
         source,
@@ -347,6 +347,6 @@ def import_energy_csv(
     )
 
 
-# Nomes curtos para consumidores do dominio e da apresentacao.
+# Nomes curtos para consumidores do domínio e da apresentação.
 load_sessions = import_sessions_csv
 load_energy_snapshots = import_energy_csv

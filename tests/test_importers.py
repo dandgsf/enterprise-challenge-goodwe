@@ -45,14 +45,14 @@ def test_rejects_empty_binary_or_non_utf8_files(payload: bytes) -> None:
 
 
 def test_rejects_missing_required_columns() -> None:
-    with pytest.raises(CsvImportError, match="colunas obrigatorias ausentes"):
+    with pytest.raises(CsvImportError, match="colunas obrigatórias ausentes"):
         import_sessions_csv(b"session_id,energy_kwh\nS-1,2.5\n")
 
 
 def test_rejects_header_only_csv() -> None:
     header = (DATA_DIR / "exemplo-sessoes-sense-plus.csv").read_bytes().splitlines()[0]
 
-    with pytest.raises(CsvImportError, match="nao contem linhas"):
+    with pytest.raises(CsvImportError, match="não contém linhas"):
         import_sessions_csv(header + b"\n")
 
 

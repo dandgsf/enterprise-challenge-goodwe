@@ -1,13 +1,14 @@
-"""Pagina Streamlit do EV ChargeOps.
+"""Página Streamlit do EV ChargeOps.
 
-Toda metrica recebida aqui ja foi calculada pela camada de dominio. Filtros
-alteram somente linhas visiveis e nunca recalculam os denominadores globais.
+Toda métrica recebida aqui já foi calculada pela camada de domínio. Filtros
+alteram somente linhas visíveis e nunca recalculam os denominadores globais.
 """
 
 from __future__ import annotations
 
 from collections.abc import Callable
 from decimal import Decimal
+from pathlib import Path
 
 import pandas as pd
 import streamlit as st
@@ -18,6 +19,9 @@ from ev_chargeops.viewmodels import DashboardViewModel, NoticeViewModel
 ProcessHandler = Callable[
     [UploadedFile | None, UploadedFile | None, Decimal, Decimal], DashboardViewModel
 ]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+GOODWE_LOGO_PATH = PROJECT_ROOT / "assets" / "brand" / "goodwe.svg"
+FIAP_ON_LOGO_PATH = PROJECT_ROOT / "assets" / "brand" / "fiap-on.svg"
 
 
 def _render_notice(notice: NoticeViewModel) -> None:
@@ -37,6 +41,23 @@ def _render_metric_strip(metrics: tuple) -> None:
     columns = st.columns(len(metrics))
     for column, metric in zip(columns, metrics, strict=True):
         column.metric(metric.label, metric.value, help=metric.context)
+
+
+def _render_brand_header(view_model: DashboardViewModel) -> None:
+    """Exibe as marcas do projeto sem competir com os indicadores da aplicação."""
+    with st.container(border=True):
+        goodwe_column, identity_column, fiap_column = st.columns(
+            (1, 4.7, 1.3), vertical_alignment="center"
+        )
+        with goodwe_column:
+            st.image(GOODWE_LOGO_PATH, width=46)
+            st.caption("GoodWe")
+        with identity_column:
+            st.header(view_model.title)
+            st.caption(view_model.subtitle)
+        with fiap_column:
+            st.image(FIAP_ON_LOGO_PATH, width=112)
+    st.divider()
 
 
 def _render_sidebar(
@@ -167,7 +188,7 @@ def _render_energy(view_model: DashboardViewModel) -> None:
     _render_metric_strip(view_model.energy_metrics)
     if view_model.energy_points:
         chart_data = pd.DataFrame(point.as_chart_row() for point in view_model.energy_points)
-        chart_data = chart_data.set_index("Horario")
+        chart_data = chart_data.set_index("Horário")
         st.line_chart(chart_data, width="stretch")
     else:
         st.info("Nenhum snapshot energético disponível.")
@@ -191,7 +212,7 @@ def render_dashboard(
     *,
     process_handler: ProcessHandler | None = None,
 ) -> None:
-    """Renderiza um snapshot do dashboard sem executar regras de dominio."""
+    """Renderiza um snapshot do dashboard sem executar regras de domínio."""
     st.set_page_config(
         page_title="EV ChargeOps",
         page_icon="⚡",
@@ -203,8 +224,7 @@ def render_dashboard(
         view_model = stored_view
     view_model = _render_sidebar(view_model, process_handler)
 
-    st.title(view_model.title)
-    st.caption(view_model.subtitle)
+    _render_brand_header(view_model)
     for notice in view_model.notices:
         _render_notice(notice)
 
