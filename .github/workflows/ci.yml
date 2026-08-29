@@ -1,0 +1,49 @@
+name: EV ChargeOps CI
+
+on:
+  push:
+    branches: [main, feat/sprint-02-mvp]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Python 3.12 / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -e . -r requirements-dev.txt
+      - name: Lint
+        run: ruff check .
+      - name: Tests and coverage
+        run: pytest
+
+  security:
+    name: Dependency and secret audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install audit tool
+        run: python -m pip install "pip-audit>=2.7,<3"
+      - name: Audit runtime dependencies
+        run: pip-audit -r requirements.txt
+      - name: Reject secrets and local artifacts
+        run: python scripts/security_scan.py --history

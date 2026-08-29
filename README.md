@@ -1,8 +1,97 @@
 # Enterprise Challenge 2026 - GoodWe + FIAP
 
-Projeto da Sprint 01 do Enterprise Challenge 2026, Fase 4 - Energia para sobreviver.
+Repositório do Enterprise Challenge 2026, Fase 4 - Energia para sobreviver. Ele reúne a
+pesquisa entregue na Sprint 01 e o **MVP funcional da Sprint 02** do EV ChargeOps.
 
 O objetivo desta sprint é pesquisar, documentar e propor a base da solução **EV ChargeOps**, termo usado no enunciado do desafio para representar uma plataforma capaz de transformar sessões de recarga de veículos elétricos e dados energéticos do local em governança, rateio justo e inteligência para reduzir custos.
+
+## MVP funcional
+
+O protótipo executa localmente e demonstra o fluxo completo:
+
+```text
+CSV simulado -> validação -> bloqueio de inconsistências -> rateio auditável
+              -> alertas consultivos de IA -> recomendações energéticas
+```
+
+O painel abre com os dois datasets simulados do repositório e também aceita o upload de um
+CSV de sessões e um CSV de energia. Os uploads são processados em memória e não são
+persistidos. As regras determinísticas, e não a IA, decidem se uma sessão pode ser faturada.
+
+### Executar localmente
+
+Pré-requisitos: Git e **Python 3.12**. Na raiz do repositório:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -e . -r requirements-dev.txt
+streamlit run app.py
+```
+
+A instalação editável (`-e .`) é necessária porque o pacote Python está em `src/`. Instalar
+somente `requirements-dev.txt` não disponibiliza `ev_chargeops` para o aplicativo.
+
+O Streamlit informará a URL local, normalmente `http://localhost:8501`. Para validar a
+implementação antes da demonstração:
+
+```powershell
+python -m ruff check .
+python -m pytest
+```
+
+### Resultado de referência
+
+Com `data/exemplo-sessoes-sense-plus.csv`, tarifa de R$ 0,92/kWh e custo comum de
+R$ 80,00, o fechamento reproduzido pelos testes é:
+
+| Indicador | Resultado |
+| --- | ---: |
+| Sessões importadas | 10 |
+| Sessões faturáveis | 7 |
+| Sessões bloqueadas | 3 |
+| Energia importada | 100,50 kWh |
+| Energia faturável | 86,10 kWh |
+| Energia protegida da cobrança | 14,40 kWh |
+| Custo variável | R$ 79,21 |
+| Custo comum | R$ 80,00 |
+| Total do rateio | R$ 159,21 |
+
+| Unidade | Energia faturável | Total |
+| --- | ---: | ---: |
+| APT-1201 | 45,70 kWh | R$ 62,04 |
+| APT-0810 | 16,00 kWh | R$ 34,72 |
+| APT-0911 | 17,90 kWh | R$ 36,47 |
+| APT-0504 | 6,50 kWh | R$ 25,98 |
+
+### Arquitetura implementada e segurança
+
+O `app.py` inicializa a composição e o painel Streamlit. A aplicação separa importação,
+validação, rateio, inteligência consultiva e apresentação no pacote `ev_chargeops`:
+
+1. importadores verificam UTF-8, tamanho de até 5 MB, cabeçalhos obrigatórios e tipos;
+2. linhas inválidas entram em quarentena sem invalidar as linhas confiáveis;
+3. regras determinísticas bloqueiam duplicidades, vínculo ausente, falha, revisão manual e
+   medições incompatíveis;
+4. o rateio usa `Decimal` e arredondamento comercial `ROUND_HALF_UP`;
+5. o `IsolationForest` apenas prioriza revisão e nunca altera a cobrança;
+6. recomendações exibem evidência, premissas e necessidade de validação humana.
+
+O sistema também registra hash SHA-256 da fonte importada e neutraliza fórmulas em
+exportações CSV. Não há banco de dados, autenticação, pagamento nem comunicação com o
+carregador no escopo deste MVP.
+
+### Evidências e pitch
+
+- [Roteiro cronometrado do pitch](docs/pitch/roteiro-pitch.md)
+- [Checklist de gravação](docs/pitch/checklist-gravacao.md)
+- [Guia de evidências e comandos](docs/pitch/evidencias-e-comandos.md)
+
+Os arquivos de exemplo são **simulados** e não representam uma planta real da FIAP. A API
+GoodWe/SEMS permanece indisponível aos alunos; por isso, o MVP usa adaptadores CSV. A
+integração com API futura, Modbus validado, cobrança de ociosidade sem campo comprobatório,
+pré-viabilidade fotovoltaica conclusiva e operação em produção permanecem fora do escopo.
 
 ## Equipe
 
@@ -250,7 +339,11 @@ Dados simulados para orientar a Sprint 2:
 
 Esses arquivos não representam dados reais da FIAP. Eles servem para desenvolver e testar importação, validação, rateio, IA e recomendações de economia sem expor dados operacionais.
 
-## Plano da Sprint 2
+## Plano original da Sprint 2
+
+O plano abaixo foi definido na etapa de pesquisa. O MVP descrito no início deste README já
+implementa modelagem de domínio, importadores CSV, rateio, recomendações, painel e IA
+consultiva. Persistência em banco e integrações reais permanecem como evolução futura.
 
 | Ordem | Entrega | Tecnologias sugeridas | Resultado esperado |
 | --- | --- | --- | --- |
@@ -274,12 +367,18 @@ Prazo informado no enunciado local: **21 de junho de 2026, às 23h59**.
 
 ```text
 enterprise-challenge-goodwe/
+  app.py
   assets/
     diagrams/
       arquitetura-ev-chargeops.mmd
       arquitetura-ev-chargeops.svg
       fluxo-sessao-recarga.mmd
       fluxo-sessao-recarga.svg
+    prints/
+      01-visao-geral.png
+      02-sessoes-alertas.png
+      03-rateio-faturas.png
+      04-energia-recomendacoes.png
   data/
     benchmark-solucoes-recarga.csv
     dicionario-campos-energia.csv
@@ -287,6 +386,10 @@ enterprise-challenge-goodwe/
     exemplo-energia-sems.csv
     exemplo-sessoes-sense-plus.csv
   docs/
+    pitch/
+      checklist-gravacao.md
+      evidencias-e-comandos.md
+      roteiro-pitch.md
     pesquisa/
       arquitetura-ia.md
       base-regulatoria-tecnica.md
@@ -295,8 +398,17 @@ enterprise-challenge-goodwe/
     revisao-senior-topico-1.md
   references/
     fontes.md
+  src/
+    ev_chargeops/
+  tests/
+  pyproject.toml
+  requirements.txt
+  requirements-dev.txt
   README.md
 ```
+
+Os quatro arquivos em `assets/prints/` registram a execução validada do MVP e estão prontos
+para uso no vídeo do pitch.
 
 ## Fontes
 
