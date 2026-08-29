@@ -5,7 +5,8 @@ __pycache__/
 .ruff_cache/
 .coverage
 htmlcov/
+.playwright-cli/
+*.egg-info/
 .streamlit/secrets.toml
 *.db
 *.sqlite3
-

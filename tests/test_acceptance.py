@@ -5,7 +5,8 @@ from streamlit.testing.v1 import AppTest
 
 from ev_chargeops.billing import calculate_billing
 from ev_chargeops.composition import build_dashboard_view
-from ev_chargeops.importers import import_sessions_csv
+from ev_chargeops.importers import import_energy_csv, import_sessions_csv
+from ev_chargeops.intelligence import generate_energy_recommendations
 from ev_chargeops.models import BillingPolicy
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -80,3 +81,11 @@ def test_real_app_recalculates_when_tariff_changes() -> None:
     assert not app.exception
     assert "R$ 166,10" in {metric.value for metric in app.metric}
     assert any("Arquivos processados" in item.value for item in app.success)
+
+
+def test_real_energy_sample_prioritizes_the_night_peak() -> None:
+    imported = import_energy_csv(PROJECT_ROOT / "data" / "exemplo-energia-sems.csv")
+    recommendations = generate_energy_recommendations(imported.records)
+
+    by_hour = {item.recorded_at.hour: item.recommendation_type for item in recommendations}
+    assert by_hour[19] == "reducao_pico"

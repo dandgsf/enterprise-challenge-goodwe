@@ -61,10 +61,8 @@ def _session(index: int, duration: int, energy: str, avg_power: str) -> Session:
 def test_recommendations_recalculate_all_four_snapshot_scenarios() -> None:
     snapshots = [
         _snapshot("ENE-001", 12, "4.80", "2.10", "-1.40", "5.40", "uso_solar"),
-        _snapshot("ENE-002", 19, "0.00", "6.70", "6.70", "0.00", "reducao_pico"),
-        _snapshot(
-            "ENE-003", 10, "3.20", "1.80", "-0.60", "2.20", "pre_viabilidade_solar"
-        ),
+        _snapshot("ENE-002", 19, "0.00", "6.70", "6.70", "5.40", "reducao_pico"),
+        _snapshot("ENE-003", 10, "3.20", "1.80", "-0.60", "2.20", "pre_viabilidade_solar"),
         _snapshot("ENE-004", 8, "1.10", "4.90", "3.80", "0.00", "ajuste_horario"),
     ]
 
@@ -101,9 +99,7 @@ def test_isolation_forest_scores_are_finite_deterministic_and_consultative() -> 
     second = score_session_anomalies(sessions)
 
     assert len(first) == len(sessions)
-    assert [item.anomaly_score for item in first] == [
-        item.anomaly_score for item in second
-    ]
+    assert [item.anomaly_score for item in first] == [item.anomaly_score for item in second]
     assert all(math.isfinite(item.anomaly_score) for item in first)
     assert sum(item.is_anomaly for item in first) == 2
     assert all("nunca altera o faturamento" in item.explanation for item in first)

@@ -74,9 +74,7 @@ def score_session_anomalies(sessions: Sequence[Session]) -> list[AnomalyAlert]:
                 "requer revisao humana e nunca altera o faturamento."
             ),
         )
-        for session, prediction, score in zip(
-            sessions, predictions, anomaly_scores, strict=True
-        )
+        for session, prediction, score in zip(sessions, predictions, anomaly_scores, strict=True)
     ]
 
 
@@ -99,18 +97,6 @@ def _recommendation_for_snapshot(snapshot: EnergySnapshot) -> Recommendation:
             assumptions=assumptions,
         )
 
-    if snapshot.grid_power_kw < 0 or snapshot.feed_in_kwh > 0:
-        return Recommendation(
-            recommendation_type="uso_solar",
-            recorded_at=snapshot.recorded_at,
-            message=(
-                "Priorizar recargas proximas desta janela para aproveitar o excedente solar, "
-                "sujeito a confirmacao recorrente do perfil de geracao."
-            ),
-            evidence=evidence,
-            assumptions=assumptions,
-        )
-
     if snapshot.recorded_at.hour >= 18 and snapshot.grid_power_kw > 0:
         return Recommendation(
             recommendation_type="reducao_pico",
@@ -118,6 +104,20 @@ def _recommendation_for_snapshot(snapshot: EnergySnapshot) -> Recommendation:
             message=(
                 "Escalonar as recargas no inicio da noite para reduzir a concentracao de "
                 "demanda importada da rede."
+            ),
+            evidence=evidence,
+            assumptions=assumptions,
+        )
+
+    # ``feed_in_kwh`` pode ser acumulado no dia. A decisao sobre excedente
+    # instantaneo usa o sinal de potencia da rede para evitar falso positivo.
+    if snapshot.grid_power_kw < 0:
+        return Recommendation(
+            recommendation_type="uso_solar",
+            recorded_at=snapshot.recorded_at,
+            message=(
+                "Priorizar recargas proximas desta janela para aproveitar o excedente solar, "
+                "sujeito a confirmacao recorrente do perfil de geracao."
             ),
             evidence=evidence,
             assumptions=assumptions,
@@ -145,9 +145,7 @@ def _energy_evidence(snapshot: EnergySnapshot) -> str:
 
 def _session_features(session: Session) -> list[float]:
     duration_hours = Decimal(session.duration_min) / Decimal(60)
-    calculated_power = (
-        session.energy_kwh / duration_hours if duration_hours > 0 else Decimal("0")
-    )
+    calculated_power = session.energy_kwh / duration_hours if duration_hours > 0 else Decimal("0")
     average_power = session.avg_power_kw if session.avg_power_kw is not None else calculated_power
     maximum_power = session.max_power_kw if session.max_power_kw is not None else average_power
     current = session.current_a if session.current_a is not None else Decimal("0")
