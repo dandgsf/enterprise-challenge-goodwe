@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from ev_chargeops.composition import build_dashboard_view
 from ev_chargeops.dashboard import render_dashboard
-from ev_chargeops.importers import MAX_CSV_BYTES
+from ev_chargeops.uploads import read_upload_pair
 from ev_chargeops.viewmodels import DashboardViewModel
 
 
@@ -23,16 +23,10 @@ def process_sources(
         )
     if sessions_upload is None or energy_upload is None:
         raise ValueError("Os dois arquivos CSV precisam ser enviados em conjunto.")
-    oversized = [
-        upload.name for upload in (sessions_upload, energy_upload) if upload.size > MAX_CSV_BYTES
-    ]
-    if oversized:
-        raise ValueError(
-            f"CSV excede o limite de {MAX_CSV_BYTES // (1024 * 1024)} MB: " + ", ".join(oversized)
-        )
+    sessions_payload, energy_payload = read_upload_pair(sessions_upload, energy_upload)
     return build_dashboard_view(
-        sessions_upload.getvalue(),
-        energy_upload.getvalue(),
+        sessions_payload,
+        energy_payload,
         sessions_filename=sessions_upload.name,
         energy_filename=energy_upload.name,
         tariff_per_kwh=tariff,
