@@ -53,9 +53,9 @@ e custo comum de R$ 80,00.
 Ao trocar a tarifa para R$ 1,00/kWh, o total deve mudar para R$ 166,10, sem alterar os 86,10
 kWh faturáveis nem os R$ 80,00 de custo comum. Retorne a tarifa para R$ 0,92 antes de gravar.
 
-## Capturas necessárias
+## Capturas validadas
 
-Crie `assets/prints/` somente no momento de registrar a execução e salve estas imagens:
+As evidências da execução estão versionadas em `assets/prints/`:
 
 1. `assets/prints/01-visao-geral.png` — cinco indicadores, avisos de dados simulados e tabela
    de reconciliação completa;

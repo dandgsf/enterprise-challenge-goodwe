@@ -407,8 +407,8 @@ enterprise-challenge-goodwe/
   README.md
 ```
 
-Os quatro arquivos em `assets/prints/` são nomes reservados para as capturas da execução e
-serão criados durante a preparação do vídeo; eles não fazem parte do código-fonte.
+Os quatro arquivos em `assets/prints/` registram a execução validada do MVP e estão prontos
+para uso no vídeo do pitch.
 
 ## Fontes
 
