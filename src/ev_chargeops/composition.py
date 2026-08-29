@@ -47,6 +47,9 @@ def build_dashboard_view(
 ) -> DashboardViewModel:
     """Executa o pipeline completo sem persistir os dados fornecidos."""
 
+    sessions_are_demo = _is_default_source(sessions_source, DEFAULT_SESSIONS_PATH)
+    energy_is_demo = _is_default_source(energy_source, DEFAULT_ENERGY_PATH)
+    uses_demo_sources = sessions_are_demo and energy_is_demo
     session_import = import_sessions_csv(sessions_source, filename=sessions_filename)
     energy_import = import_energy_csv(energy_source, filename=energy_filename)
     billing = calculate_billing(
@@ -100,8 +103,12 @@ def build_dashboard_view(
         title="EV ChargeOps",
         subtitle="Governanca auditavel para recarga compartilhada",
         generated_at=format_datetime_pt_br(generated_at),
-        sessions_source=_source_label(session_import.filename, session_import.file_hash),
-        energy_source=_source_label(energy_import.filename, energy_import.file_hash),
+        sessions_source=_source_label(
+            session_import.filename, session_import.file_hash, simulated=sessions_are_demo
+        ),
+        energy_source=_source_label(
+            energy_import.filename, energy_import.file_hash, simulated=energy_is_demo
+        ),
         reference_period=_reference_period(session_import.records),
         overview_metrics=(
             MetricViewModel(
@@ -146,7 +153,11 @@ def build_dashboard_view(
         recommendations=tuple(_recommendation_view(item) for item in recommendations),
         notices=(
             NoticeViewModel(
-                "Dados simulados: esta demonstracao nao representa uma planta real.",
+                (
+                    "Dados simulados: esta demonstracao nao representa uma planta real."
+                    if uses_demo_sources
+                    else "Dados enviados por upload: valide a origem antes de qualquer uso real."
+                ),
                 "warning",
             ),
             NoticeViewModel(
@@ -239,8 +250,15 @@ def _energy_metrics(snapshots: Sequence[Any]) -> tuple[MetricViewModel, ...]:
     )
 
 
-def _source_label(filename: str, file_hash: str) -> str:
-    return f"{filename} (simulado, SHA-256 {file_hash[:12]}...)"
+def _source_label(filename: str, file_hash: str, *, simulated: bool) -> str:
+    provenance = "simulado" if simulated else "upload nao persistido"
+    return f"{filename} ({provenance}, SHA-256 {file_hash[:12]}...)"
+
+
+def _is_default_source(source: Source, expected: Path) -> bool:
+    if not isinstance(source, (str, Path)):
+        return False
+    return Path(source).resolve() == expected.resolve()
 
 
 def _reference_period(sessions: Sequence[Session]) -> str:

@@ -1,11 +1,14 @@
 from decimal import Decimal
 from pathlib import Path
+from types import SimpleNamespace
 
+import pytest
 from streamlit.testing.v1 import AppTest
 
+from app import process_sources
 from ev_chargeops.billing import calculate_billing
 from ev_chargeops.composition import build_dashboard_view
-from ev_chargeops.importers import import_energy_csv, import_sessions_csv
+from ev_chargeops.importers import MAX_CSV_BYTES, import_energy_csv, import_sessions_csv
 from ev_chargeops.intelligence import generate_energy_recommendations
 from ev_chargeops.models import BillingPolicy
 
@@ -89,3 +92,31 @@ def test_real_energy_sample_prioritizes_the_night_peak() -> None:
 
     by_hour = {item.recorded_at.hour: item.recommendation_type for item in recommendations}
     assert by_hour[19] == "reducao_pico"
+
+
+def test_uploaded_sources_are_not_labeled_as_simulated() -> None:
+    view = build_dashboard_view(
+        (PROJECT_ROOT / "data" / "exemplo-sessoes-sense-plus.csv").read_bytes(),
+        (PROJECT_ROOT / "data" / "exemplo-energia-sems.csv").read_bytes(),
+        sessions_filename="sessoes-upload.csv",
+        energy_filename="energia-upload.csv",
+    )
+
+    assert "upload nao persistido" in view.sessions_source
+    assert "upload nao persistido" in view.energy_source
+    assert any("Dados enviados por upload" in notice.message for notice in view.notices)
+
+
+def test_oversized_upload_is_rejected_before_reading_its_bytes() -> None:
+    def unexpected_read() -> bytes:
+        raise AssertionError("getvalue nao deveria ser chamado para upload grande")
+
+    oversized = SimpleNamespace(
+        name="sessoes-grandes.csv",
+        size=MAX_CSV_BYTES + 1,
+        getvalue=unexpected_read,
+    )
+    energy = SimpleNamespace(name="energia.csv", size=1, getvalue=lambda: b"x")
+
+    with pytest.raises(ValueError, match="limite de 5 MB"):
+        process_sources(oversized, energy, Decimal("0.92"), Decimal("80.00"))

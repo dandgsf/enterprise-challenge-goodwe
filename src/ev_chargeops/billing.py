@@ -71,6 +71,7 @@ def calculate_billing(
     blocked_ids = blocked_session_ids(issues)
     billable = [session for session in sessions if session.session_id not in blocked_ids]
     blocked = [session for session in sessions if session.session_id in blocked_ids]
+    billing_month = _billing_month(billable, reference_month)
 
     by_unit: dict[str, list[Session]] = defaultdict(list)
     for session in billable:
@@ -83,7 +84,6 @@ def calculate_billing(
     for unit in units:
         unit_sessions = sorted(by_unit[unit], key=lambda item: (item.start_at, item.session_id))
         total_kwh = sum((session.energy_kwh for session in unit_sessions), Decimal("0"))
-        energy_cost = money(total_kwh * active_policy.tariff_per_kwh)
         common_cost = common_allocations[unit]
         idle_items: list[InvoiceItem] = []
         idle_cost = Decimal("0.00")
@@ -121,16 +121,18 @@ def calculate_billing(
             )
             for session in unit_sessions
         ]
+        # A memoria de calculo e a autoridade monetaria: a fatura soma os
+        # mesmos centavos exibidos em cada sessao, sem reconciliacao implicita.
+        energy_cost = sum((item.amount for item in energy_items), Decimal("0.00"))
         common_item = InvoiceItem(
             item_type="common_cost",
             description=f"Custo comum mensal ({active_policy.common_cost_rule})",
             amount=common_cost,
         )
-        month = reference_month or _reference_month(unit_sessions)
         invoices.append(
             Invoice(
                 unit_id=unit,
-                reference_month=month,
+                reference_month=billing_month,
                 total_kwh=total_kwh.quantize(KWH_QUANTUM),
                 energy_cost=energy_cost,
                 common_cost=common_cost,
@@ -166,9 +168,21 @@ def calculate_billing(
     )
 
 
-def _reference_month(sessions: Sequence[Session]) -> str:
+def _billing_month(sessions: Sequence[Session], requested_month: str | None) -> str:
     months = sorted({session.start_at.strftime("%Y-%m") for session in sessions})
-    return months[0] if len(months) == 1 else "mixed"
+    if len(months) > 1:
+        raise ValueError(
+            "O fechamento e mensal; arquivos com sessoes faturaveis de meses distintos "
+            "precisam ser processados separadamente."
+        )
+    if not months:
+        return requested_month or "sem-sessoes-faturaveis"
+    actual_month = months[0]
+    if requested_month is not None and requested_month != actual_month:
+        raise ValueError(
+            f"Mes de referencia {requested_month!r} nao corresponde aos dados {actual_month!r}."
+        )
+    return actual_month
 
 
 def sanitize_csv_cell(value: object) -> str:

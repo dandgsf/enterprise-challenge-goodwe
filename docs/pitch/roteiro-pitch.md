@@ -45,7 +45,8 @@ Não sugira que os arquivos representam dados reais da FIAP.
 
 > As regras determinísticas bloqueiam casos como falha, revisão explícita ou usuário sem
 > vínculo. Cada linha mantém o motivo para auditoria. O Isolation Forest aparece como um sinal
-> experimental para ordenar a revisão humana, mas nunca libera, bloqueia ou altera uma cobrança.
+> experimental para ajudar a priorizar a revisão humana, mas nunca libera, bloqueia ou altera
+> uma cobrança.
 
 ## 1:38–2:08 — Fatura auditável
 
@@ -66,9 +67,10 @@ Não sugira que os arquivos representam dados reais da FIAP.
 **Fala:**
 
 > Os snapshots de energia permitem comparar geração solar, carga e uso da rede. O sistema
-> sugere aproveitar janelas com excedente solar e escalonar recargas no pico noturno. Cada
-> recomendação mostra evidência e premissas. Uma decisão sobre expansão fotovoltaica continua
-> dependendo de série histórica e validação de engenharia.
+> sugere aproveitar janelas com excedente solar e escalonar recargas na maior importação
+> noturna observada nestes snapshots simulados. Cada recomendação mostra evidência e premissas.
+> Uma decisão sobre expansão fotovoltaica continua dependendo de série histórica e validação
+> de engenharia.
 
 ## 2:36–2:48 — Encerramento
 
