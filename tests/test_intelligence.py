@@ -78,7 +78,7 @@ def test_recommendations_recalculate_all_four_snapshot_scenarios() -> None:
     assert all("PV" in item.evidence and "rede" in item.evidence for item in recommendations)
     assert all("Snapshot pontual" in item.assumptions for item in recommendations)
     assert "Dados insuficientes" in recommendations[2].message
-    assert "validacao tecnica" in recommendations[2].message
+    assert "validação técnica" in recommendations[2].message
 
 
 def test_isolation_forest_scores_are_finite_deterministic_and_consultative() -> None:

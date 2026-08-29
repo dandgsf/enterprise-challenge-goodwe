@@ -1,7 +1,7 @@
-"""Contratos de apresentacao prontos para consumo pelo dashboard.
+"""Contratos de apresentação prontos para consumo pelo dashboard.
 
-Este modulo nao conhece importadores, regras de rateio ou modelos de machine
-learning. A camada de composicao converte resultados do dominio para estes
+Este módulo não conhece importadores, regras de rateio ou modelos de machine
+learning. A camada de composição converte resultados do domínio para estes
 objetos; a interface apenas os renderiza.
 """
 
@@ -20,7 +20,7 @@ def format_decimal_pt_br(value: Decimal, decimal_places: int = 2) -> str:
 
 
 def format_brl(value: Decimal) -> str:
-    """Formata valor monetario no padrao exibido pelo MVP."""
+    """Formata valor monetário no padrão exibido pelo MVP."""
     return f"R$ {format_decimal_pt_br(value)}"
 
 
@@ -64,17 +64,17 @@ class SessionRowViewModel:
     status_key: str
     billing_decision: str
     alert: str
-    anomaly: str = "Nao sinalizada"
+    anomaly: str = "Não sinalizada"
 
     def as_table_row(self) -> dict[str, str]:
         return {
-            "Sessao": self.session_id,
+            "Sessão": self.session_id,
             "Unidade": self.unit_id,
-            "Inicio": self.started_at,
-            "Duracao": self.duration,
+            "Início": self.started_at,
+            "Duração": self.duration,
             "Energia": self.energy,
             "Status": self.status,
-            "Decisao": self.billing_decision,
+            "Decisão": self.billing_decision,
             "Alerta": self.alert,
             "IA consultiva": self.anomaly,
         }
@@ -95,7 +95,7 @@ class InvoiceRowViewModel:
     def as_table_row(self) -> dict[str, str]:
         return {
             "Unidade": self.unit_id,
-            "Sessoes": self.sessions,
+            "Sessões": self.sessions,
             "Energia": self.energy,
             "Custo de energia": self.energy_cost,
             "Custo comum": self.common_cost,
@@ -117,8 +117,8 @@ class InvoiceItemViewModel:
 
     def as_table_row(self) -> dict[str, str]:
         return {
-            "Descricao": self.description,
-            "Sessao": self.session_id,
+            "Descrição": self.description,
+            "Sessão": self.session_id,
             "Quantidade": self.quantity,
             "Valor unitario": self.unit_value,
             "Valor": self.amount,
@@ -136,7 +136,7 @@ class EnergyPointViewModel:
 
     def as_chart_row(self) -> dict[str, str | float]:
         return {
-            "Horario": self.recorded_at,
+            "Horário": self.recorded_at,
             "Solar (kW)": self.solar_kw,
             "Carga (kW)": self.load_kw,
             "Rede (kW)": self.grid_kw,
@@ -145,7 +145,7 @@ class EnergyPointViewModel:
 
 @dataclass(frozen=True, slots=True)
 class RecommendationViewModel:
-    """Recomendacao explicavel e sujeita a revisao humana."""
+    """Recomendação explicável e sujeita a revisão humana."""
 
     title: str
     message: str
@@ -164,7 +164,7 @@ class NoticeViewModel:
 
 @dataclass(frozen=True, slots=True)
 class DashboardViewModel:
-    """Snapshot imutavel e completo da pagina do EV ChargeOps."""
+    """Snapshot imutável e completo da página do EV ChargeOps."""
 
     title: str
     subtitle: str
@@ -180,25 +180,25 @@ class DashboardViewModel:
     energy_points: tuple[EnergyPointViewModel, ...] = field(default_factory=tuple)
     recommendations: tuple[RecommendationViewModel, ...] = field(default_factory=tuple)
     notices: tuple[NoticeViewModel, ...] = field(default_factory=tuple)
-    reference_period: str = "Nao informado"
-    idle_measurement: str = "Nao calculada por falta de evidencia (idle_minutes ausente)."
+    reference_period: str = "Não informado"
+    idle_measurement: str = "Não calculada por falta de evidência (idle_minutes ausente)."
 
 
 def empty_dashboard_view_model() -> DashboardViewModel:
-    """Estado inicial seguro enquanto a composicao de dominio nao foi injetada."""
+    """Estado inicial seguro enquanto a composição de domínio não foi injetada."""
     return DashboardViewModel(
         title="EV ChargeOps",
-        subtitle="Governanca auditavel para recarga compartilhada",
+        subtitle="Governança auditável para recarga compartilhada",
         generated_at="Aguardando processamento",
-        sessions_source="Dados simulados incluidos no repositorio",
-        energy_source="Dados simulados incluidos no repositorio",
+        sessions_source="Dados simulados incluídos no repositório",
+        energy_source="Dados simulados incluídos no repositório",
         notices=(
             NoticeViewModel(
-                "Os dados desta demonstracao sao simulados e nao representam uma planta real.",
+                "Os dados desta demonstração são simulados e não representam uma planta real.",
                 "warning",
             ),
             NoticeViewModel(
-                "A API GoodWe/SEMS nao esta disponivel neste MVP; a entrada ocorre por CSV.",
+                "A API GoodWe/SEMS não está disponível neste MVP; a entrada ocorre por CSV.",
                 "info",
             ),
         ),

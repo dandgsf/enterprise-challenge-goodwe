@@ -1,6 +1,6 @@
-"""Inteligencia consultiva e explicavel do EV ChargeOps.
+"""Inteligência consultiva e explicável do EV ChargeOps.
 
-As regras deste modulo apenas produzem recomendacoes e priorizam revisoes.
+As regras deste módulo apenas produzem recomendações e priorizam revisões.
 Nenhum resultado altera elegibilidade ou valores do motor de faturamento.
 """
 
@@ -21,20 +21,20 @@ ANOMALY_RANDOM_STATE = 42
 def generate_energy_recommendations(
     snapshots: Sequence[EnergySnapshot],
 ) -> list[Recommendation]:
-    """Recalcula recomendacoes auditaveis a partir de leituras energeticas.
+    """Recalcula recomendações auditáveis a partir de leituras energéticas.
 
     O campo ``source_recommendation_type`` e preservado apenas como contexto de
-    origem: a classificacao e a evidencia sao derivadas novamente dos numeros.
+    origem: a classificação e a evidência são derivadas novamente dos números.
     """
 
     return [_recommendation_for_snapshot(snapshot) for snapshot in snapshots]
 
 
 def score_session_anomalies(sessions: Sequence[Session]) -> list[AnomalyAlert]:
-    """Prioriza sessoes para revisao sem interferir no faturamento.
+    """Prioriza sessões para revisão sem interferir no faturamento.
 
-    Uma amostra pequena demais nao sustenta o ajuste do IsolationForest; nesse
-    caso cada sessao recebe um alerta neutro e uma explicacao explicita.
+    Uma amostra pequena demais não sustenta o ajuste do IsolationForest; nesse
+    caso cada sessão recebe um alerta neutro e uma explicação explícita.
     """
 
     if not sessions:
@@ -90,8 +90,8 @@ def _recommendation_for_snapshot(snapshot: EnergySnapshot) -> Recommendation:
             recommendation_type="pre_viabilidade_solar",
             recorded_at=snapshot.recorded_at,
             message=(
-                "Dados insuficientes para pre-viabilidade fotovoltaica. Reunir uma serie "
-                "historica representativa e solicitar validacao tecnica antes de decidir."
+                "Dados insuficientes para pré-viabilidade fotovoltaica. Reunir uma série "
+                "histórica representativa e solicitar validação técnica antes de decidir."
             ),
             evidence=evidence,
             assumptions=assumptions,
@@ -102,7 +102,7 @@ def _recommendation_for_snapshot(snapshot: EnergySnapshot) -> Recommendation:
             recommendation_type="reducao_pico",
             recorded_at=snapshot.recorded_at,
             message=(
-                "Escalonar as recargas no inicio da noite para reduzir a concentracao de "
+                "Escalonar as recargas no início da noite para reduzir a concentração de "
                 "demanda importada da rede."
             ),
             evidence=evidence,
@@ -116,8 +116,8 @@ def _recommendation_for_snapshot(snapshot: EnergySnapshot) -> Recommendation:
             recommendation_type="uso_solar",
             recorded_at=snapshot.recorded_at,
             message=(
-                "Priorizar recargas proximas desta janela para aproveitar o excedente solar, "
-                "sujeito a confirmacao recorrente do perfil de geracao."
+                "Priorizar recargas próximas desta janela para aproveitar o excedente solar, "
+                "sujeito à confirmação recorrente do perfil de geração."
             ),
             evidence=evidence,
             assumptions=assumptions,
@@ -127,8 +127,8 @@ def _recommendation_for_snapshot(snapshot: EnergySnapshot) -> Recommendation:
         recommendation_type="ajuste_horario",
         recorded_at=snapshot.recorded_at,
         message=(
-            "Avaliar o deslocamento de parte das recargas para uma janela com maior geracao "
-            "solar e menor dependencia da rede."
+            "Avaliar o deslocamento de parte das recargas para uma janela com maior geração "
+            "solar e menor dependência da rede."
         ),
         evidence=evidence,
         assumptions=assumptions,
@@ -138,7 +138,7 @@ def _recommendation_for_snapshot(snapshot: EnergySnapshot) -> Recommendation:
 def _energy_evidence(snapshot: EnergySnapshot) -> str:
     return (
         f"PV {snapshot.pv_power_kw:.2f} kW; carga {snapshot.load_power_kw:.2f} kW; "
-        f"rede {snapshot.grid_power_kw:.2f} kW; injecao acumulada "
+        f"rede {snapshot.grid_power_kw:.2f} kW; injeção acumulada "
         f"{snapshot.feed_in_kwh:.2f} kWh."
     )
 
