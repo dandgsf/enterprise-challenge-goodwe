@@ -5,12 +5,12 @@ from types import SimpleNamespace
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from app import process_sources
 from ev_chargeops.billing import calculate_billing
 from ev_chargeops.composition import build_dashboard_view
 from ev_chargeops.importers import MAX_CSV_BYTES, import_energy_csv, import_sessions_csv
 from ev_chargeops.intelligence import generate_energy_recommendations
 from ev_chargeops.models import BillingPolicy
+from ev_chargeops.uploads import read_upload_pair
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -119,4 +119,4 @@ def test_oversized_upload_is_rejected_before_reading_its_bytes() -> None:
     energy = SimpleNamespace(name="energia.csv", size=1, getvalue=lambda: b"x")
 
     with pytest.raises(ValueError, match="limite de 5 MB"):
-        process_sources(oversized, energy, Decimal("0.92"), Decimal("80.00"))
+        read_upload_pair(oversized, energy)
