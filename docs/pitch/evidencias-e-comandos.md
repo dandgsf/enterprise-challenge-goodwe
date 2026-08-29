@@ -63,8 +63,8 @@ As evidências da execução estão versionadas em `assets/prints/`:
    mostrando as três sessões bloqueadas e seus motivos;
 3. `assets/prints/03-rateio-faturas.png` — aba Rateio e faturas com a memória de cálculo da
    APT-1201 e total de R$ 62,04;
-4. `assets/prints/04-energia-recomendacoes.png` — gráfico de energia e recomendações de uso
-   solar e redução de pico com evidências visíveis.
+4. `assets/prints/04-energia-recomendacoes.png` — recomendações de uso solar e redução de pico
+   com evidências e premissas visíveis; o gráfico é mostrado ao vivo antes da rolagem.
 
 Capture apenas a área do aplicativo, sem terminal, notificações ou dados pessoais. Não edite
 os valores nas imagens: a evidência precisa corresponder à execução reproduzível.

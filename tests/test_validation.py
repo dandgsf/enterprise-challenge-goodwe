@@ -39,3 +39,24 @@ def test_end_before_start_is_blocked() -> None:
     issues = validate_sessions([invalid])
 
     assert any(issue.code == "invalid_date_range" for issue in issues)
+
+
+def test_missing_user_is_blocked_with_explicit_reason() -> None:
+    sessions = import_sessions_csv(DATA_PATH).records
+    missing_user = next(session for session in sessions if session.session_id == "SES-2026-06-007")
+
+    issues = validate_sessions([missing_user])
+
+    issues_by_code = {issue.code: issue for issue in issues}
+    assert issues_by_code["missing_user_or_unit"].blocks_billing is True
+
+
+def test_failed_zero_kwh_session_has_both_blocking_reasons() -> None:
+    sessions = import_sessions_csv(DATA_PATH).records
+    failed = next(session for session in sessions if session.session_id == "SES-2026-06-005")
+
+    issues = validate_sessions([failed])
+
+    issues_by_code = {issue.code: issue for issue in issues}
+    assert issues_by_code["zero_energy"].blocks_billing is True
+    assert issues_by_code["non_completed_status"].blocks_billing is True

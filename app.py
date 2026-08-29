@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from ev_chargeops.composition import build_dashboard_view
 from ev_chargeops.dashboard import render_dashboard
+from ev_chargeops.importers import MAX_CSV_BYTES
 from ev_chargeops.viewmodels import DashboardViewModel
 
 
@@ -22,6 +23,13 @@ def process_sources(
         )
     if sessions_upload is None or energy_upload is None:
         raise ValueError("Os dois arquivos CSV precisam ser enviados em conjunto.")
+    oversized = [
+        upload.name for upload in (sessions_upload, energy_upload) if upload.size > MAX_CSV_BYTES
+    ]
+    if oversized:
+        raise ValueError(
+            f"CSV excede o limite de {MAX_CSV_BYTES // (1024 * 1024)} MB: " + ", ".join(oversized)
+        )
     return build_dashboard_view(
         sessions_upload.getvalue(),
         energy_upload.getvalue(),
@@ -32,4 +40,11 @@ def process_sources(
     )
 
 
-render_dashboard(build_dashboard_view(), process_handler=process_sources)
+def main() -> None:
+    """Renderiza o aplicativo quando executado pelo Streamlit."""
+
+    render_dashboard(build_dashboard_view(), process_handler=process_sources)
+
+
+if __name__ == "__main__":
+    main()

@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal
 from enum import StrEnum
-from typing import TypeVar
+from typing import Literal, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -106,7 +106,7 @@ class BillingPolicy(BaseModel):
 
     tariff_per_kwh: Decimal = Field(default=Decimal("0.92"), ge=0)
     monthly_common_cost: Decimal = Field(default=Decimal("80.00"), ge=0)
-    common_cost_rule: str = "active_units"
+    common_cost_rule: Literal["active_units"] = "active_units"
     idle_grace_minutes: int = Field(default=0, ge=0)
     idle_rate_per_minute: Decimal = Field(default=Decimal("0.00"), ge=0)
 
