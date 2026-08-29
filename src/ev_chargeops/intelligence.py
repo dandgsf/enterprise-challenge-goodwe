@@ -82,7 +82,7 @@ def _recommendation_for_snapshot(snapshot: EnergySnapshot) -> Recommendation:
     evidence = _energy_evidence(snapshot)
     assumptions = (
         "Snapshot pontual, sinais de rede conforme a fonte e tarifa estimada; "
-        "confirmar serie historica, capacidade eletrica e operacao local."
+        "confirmar série histórica, capacidade elétrica e operação local."
     )
 
     if snapshot.source_recommendation_type == "pre_viabilidade_solar":

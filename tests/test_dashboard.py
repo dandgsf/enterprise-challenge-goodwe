@@ -134,6 +134,7 @@ def test_dashboard_smoke_renders_all_sections(
     assert len(dashboard.file_uploader) == 2
     assert len(dashboard.dataframe) == 2
     assert len(dashboard.table) == 2
+    assert [choice.label for choice in dashboard.radio] == ["Visualização energética"]
 
 
 def test_session_filter_does_not_change_global_metrics(

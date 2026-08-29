@@ -23,6 +23,172 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 GOODWE_LOGO_PATH = PROJECT_ROOT / "assets" / "brand" / "goodwe.svg"
 FIAP_ON_LOGO_PATH = PROJECT_ROOT / "assets" / "brand" / "fiap-on.svg"
 
+THEME_CSS = """
+<style>
+    :root {
+        --ops-ink: #14212b;
+        --ops-muted: #61717f;
+        --ops-surface: #ffffff;
+        --ops-canvas: #f4f7f8;
+        --ops-border: #d8e1e7;
+        --ops-red: #e60013;
+        --ops-teal: #0f766e;
+    }
+
+    .stApp {
+        background: var(--ops-canvas);
+        color: var(--ops-ink);
+    }
+
+    [data-testid="stSidebar"] > div:first-child {
+        background: #17232d;
+        border-right: 1px solid #2f414d;
+    }
+
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+        color: #f8fafc;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stCaptionContainer"] p,
+    [data-testid="stSidebar"] small {
+        color: #cbd5df;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stFileUploader"] {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(203, 213, 223, 0.28);
+        border-radius: 14px;
+        padding: 0.65rem;
+    }
+
+    [data-testid="stSidebar"] [data-baseweb="input"] {
+        border-radius: 10px;
+    }
+
+    h1, h2, h3 {
+        color: var(--ops-ink);
+        font-family: Aptos, "Segoe UI", sans-serif;
+        letter-spacing: -0.02em;
+    }
+
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background: var(--ops-surface);
+        border: 1px solid var(--ops-border);
+        border-radius: 16px;
+        box-shadow: 0 16px 34px -28px rgba(20, 33, 43, 0.58);
+    }
+
+    [data-testid="stMetric"] {
+        background: var(--ops-surface);
+        border-top: 3px solid var(--ops-red);
+        border-radius: 14px;
+        box-shadow: 0 14px 28px -24px rgba(20, 33, 43, 0.58);
+        min-height: 7.4rem;
+        padding: 0.9rem 1rem 0.75rem;
+        transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    [data-testid="stMetric"]:hover {
+        box-shadow: 0 18px 30px -24px rgba(20, 33, 43, 0.72);
+        transform: translateY(-2px);
+    }
+
+    [data-testid="stMetricLabel"] p {
+        color: var(--ops-muted);
+        font-size: 0.78rem;
+        font-weight: 650;
+        letter-spacing: 0.01em;
+        white-space: normal;
+    }
+
+    [data-testid="stMetricValue"] {
+        color: var(--ops-ink);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .stButton > button[kind="primary"] {
+        background: var(--ops-red);
+        border: 1px solid var(--ops-red);
+        border-radius: 10px;
+        box-shadow: 0 10px 20px -16px rgba(230, 0, 19, 0.8);
+        font-weight: 700;
+        transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    }
+
+    .stButton > button[kind="primary"]:hover {
+        background: #bf0010;
+        border-color: #bf0010;
+        box-shadow: 0 14px 24px -16px rgba(191, 0, 16, 0.84);
+        transform: translateY(-1px);
+    }
+
+    .stButton > button[kind="primary"]:active {
+        transform: translateY(1px) scale(0.99);
+    }
+
+    [data-baseweb="tab-list"] {
+        gap: 0.7rem;
+        border-bottom: 1px solid var(--ops-border);
+    }
+
+    button[data-baseweb="tab"] {
+        color: var(--ops-muted);
+        font-weight: 650;
+        padding: 0.45rem 0.25rem 0.65rem;
+    }
+
+    button[data-baseweb="tab"][aria-selected="true"] {
+        color: var(--ops-red);
+    }
+
+    [data-testid="stAlert"] {
+        border-radius: 12px;
+    }
+
+    .ops-signal {
+        align-items: center;
+        color: var(--ops-muted);
+        display: inline-flex;
+        font-size: 0.78rem;
+        font-weight: 650;
+        gap: 0.45rem;
+        letter-spacing: 0.01em;
+        margin-top: 0.1rem;
+    }
+
+    .ops-signal__dot {
+        animation: ops-pulse 2.2s ease-in-out infinite;
+        background: var(--ops-teal);
+        border-radius: 50%;
+        display: inline-block;
+        height: 0.5rem;
+        width: 0.5rem;
+    }
+
+    @keyframes ops-pulse {
+        0%, 100% { opacity: 0.6; transform: scale(0.9); }
+        50% { opacity: 1; transform: scale(1.15); }
+    }
+
+    @media (max-width: 760px) {
+        [data-testid="stMetric"] { min-height: auto; }
+        [data-baseweb="tab-list"] { gap: 0.25rem; }
+        button[data-baseweb="tab"] { font-size: 0.8rem; }
+
+        [data-testid="stVerticalBlockBorderWrapper"] h2 {
+            font-size: 1.35rem;
+        }
+
+        [data-testid="stVerticalBlockBorderWrapper"] .ops-signal {
+            font-size: 0.68rem;
+        }
+    }
+</style>
+"""
+
 
 def _render_notice(notice: NoticeViewModel) -> None:
     renderers = {
@@ -38,25 +204,32 @@ def _render_metric_strip(metrics: tuple) -> None:
         st.info("Nenhuma métrica disponível para o recorte atual.")
         return
 
-    columns = st.columns(len(metrics))
-    for column, metric in zip(columns, metrics, strict=True):
-        column.metric(metric.label, metric.value, help=metric.context)
+    for start in range(0, len(metrics), 3):
+        row_metrics = metrics[start : start + 3]
+        columns = st.columns(len(row_metrics))
+        for column, metric in zip(columns, row_metrics, strict=True):
+            column.metric(metric.label, metric.value, help=metric.context)
 
 
 def _render_brand_header(view_model: DashboardViewModel) -> None:
     """Exibe as marcas do projeto sem competir com os indicadores da aplicação."""
     with st.container(border=True):
-        goodwe_column, identity_column, fiap_column = st.columns(
-            (1, 4.7, 1.3), vertical_alignment="center"
-        )
+        goodwe_column, identity_column = st.columns((1, 6.2), vertical_alignment="center")
         with goodwe_column:
             st.image(GOODWE_LOGO_PATH, width=46)
             st.caption("GoodWe")
         with identity_column:
-            st.header(view_model.title)
-            st.caption(view_model.subtitle)
-        with fiap_column:
-            st.image(FIAP_ON_LOGO_PATH, width=112)
+            title_column, fiap_column = st.columns((4.8, 1.2), vertical_alignment="center")
+            with title_column:
+                st.header(view_model.title)
+                st.caption(view_model.subtitle)
+            with fiap_column:
+                st.image(FIAP_ON_LOGO_PATH, width=112)
+            st.markdown(
+                "<div class='ops-signal'><span class='ops-signal__dot'></span>"
+                "Modo demonstrativo · processamento local</div>",
+                unsafe_allow_html=True,
+            )
     st.divider()
 
 
@@ -173,7 +346,7 @@ def _render_invoices(view_model: DashboardViewModel) -> None:
     visible_items = tuple(
         item for item in view_model.invoice_items if item.unit_id == selected_unit
     )
-    st.subheader(f"Memoria de calculo — {selected_unit}")
+    st.subheader(f"Memória de cálculo — {selected_unit}")
     if visible_items:
         st.table(pd.DataFrame(item.as_table_row() for item in visible_items))
     else:
@@ -187,9 +360,22 @@ def _render_invoices(view_model: DashboardViewModel) -> None:
 def _render_energy(view_model: DashboardViewModel) -> None:
     _render_metric_strip(view_model.energy_metrics)
     if view_model.energy_points:
-        chart_data = pd.DataFrame(point.as_chart_row() for point in view_model.energy_points)
-        chart_data = chart_data.set_index("Horário")
-        st.line_chart(chart_data, width="stretch")
+        chart_mode = st.radio(
+            "Visualização energética",
+            ("Potência instantânea", "Balanço energético"),
+            horizontal=True,
+            key="energy_chart_mode",
+        )
+        if chart_mode == "Potência instantânea":
+            chart_data = pd.DataFrame(point.as_chart_row() for point in view_model.energy_points)
+            chart_data = chart_data.set_index("Horário")
+            st.line_chart(chart_data, width="stretch")
+        else:
+            balance_data = pd.DataFrame(
+                point.as_balance_chart_row() for point in view_model.energy_points
+            )
+            balance_data = balance_data.set_index("Horário")
+            st.area_chart(balance_data, width="stretch")
     else:
         st.info("Nenhum snapshot energético disponível.")
 
@@ -215,10 +401,10 @@ def render_dashboard(
     """Renderiza um snapshot do dashboard sem executar regras de domínio."""
     st.set_page_config(
         page_title="EV ChargeOps",
-        page_icon="⚡",
         layout="wide",
         initial_sidebar_state="expanded",
     )
+    st.markdown(THEME_CSS, unsafe_allow_html=True)
     stored_view = st.session_state.get("ev_chargeops_view_model")
     if isinstance(stored_view, DashboardViewModel):
         view_model = stored_view

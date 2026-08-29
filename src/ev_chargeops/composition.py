@@ -94,6 +94,10 @@ def build_dashboard_view(
             solar_kw=float(snapshot.pv_power_kw),
             load_kw=float(snapshot.load_power_kw),
             grid_kw=float(snapshot.grid_power_kw),
+            solar_generation_kwh=float(snapshot.pv_generation_kwh),
+            load_consumption_kwh=float(snapshot.load_consumption_kwh),
+            grid_consumption_kwh=float(snapshot.grid_consumption_kwh),
+            exported_kwh=float(snapshot.feed_in_kwh),
         )
         for snapshot in energy_import.records
     )
