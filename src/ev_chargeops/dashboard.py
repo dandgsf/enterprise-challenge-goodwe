@@ -7,6 +7,7 @@ alteram somente linhas visiveis e nunca recalculam os denominadores globais.
 from __future__ import annotations
 
 from collections.abc import Callable
+from decimal import Decimal
 
 import pandas as pd
 import streamlit as st
@@ -14,7 +15,9 @@ from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 from ev_chargeops.viewmodels import DashboardViewModel, NoticeViewModel
 
-UploadHandler = Callable[[UploadedFile, UploadedFile], DashboardViewModel]
+ProcessHandler = Callable[
+    [UploadedFile | None, UploadedFile | None, Decimal, Decimal], DashboardViewModel
+]
 
 
 def _render_notice(notice: NoticeViewModel) -> None:
@@ -38,7 +41,7 @@ def _render_metric_strip(metrics: tuple) -> None:
 
 def _render_sidebar(
     view_model: DashboardViewModel,
-    upload_handler: UploadHandler | None,
+    process_handler: ProcessHandler | None,
 ) -> DashboardViewModel:
     with st.sidebar:
         st.header("Fontes e premissas")
@@ -49,15 +52,32 @@ def _render_sidebar(
         energy_upload = st.file_uploader(
             "Energia da planta (CSV)", type=("csv",), key="energy_upload"
         )
+        tariff = st.number_input(
+            "Tarifa (R$/kWh)", min_value=0.0, value=0.92, step=0.01, format="%.2f"
+        )
+        common_cost = st.number_input(
+            "Custo comum mensal (R$)",
+            min_value=0.0,
+            value=80.0,
+            step=10.0,
+            format="%.2f",
+        )
 
-        if st.button("Processar arquivos", type="primary", width="stretch"):
-            if sessions_upload is None or energy_upload is None:
-                st.warning("Selecione os dois arquivos CSV antes de processar.")
-            elif upload_handler is None:
+        if st.button("Aplicar e processar", type="primary", width="stretch"):
+            only_one_upload = (sessions_upload is None) != (energy_upload is None)
+            if only_one_upload:
+                st.warning("Envie os dois CSVs ou deixe ambos vazios para usar a demonstração.")
+            elif process_handler is None:
                 st.info("O processamento será conectado pela camada de composição do MVP.")
             else:
                 try:
-                    view_model = upload_handler(sessions_upload, energy_upload)
+                    view_model = process_handler(
+                        sessions_upload,
+                        energy_upload,
+                        Decimal(str(tariff)),
+                        Decimal(str(common_cost)),
+                    )
+                    st.session_state["ev_chargeops_view_model"] = view_model
                     st.success("Arquivos processados. O painel foi atualizado.")
                 except (TypeError, ValueError) as exc:
                     st.error(f"Não foi possível processar os arquivos: {exc}")
@@ -169,7 +189,7 @@ def _render_energy(view_model: DashboardViewModel) -> None:
 def render_dashboard(
     view_model: DashboardViewModel,
     *,
-    upload_handler: UploadHandler | None = None,
+    process_handler: ProcessHandler | None = None,
 ) -> None:
     """Renderiza um snapshot do dashboard sem executar regras de dominio."""
     st.set_page_config(
@@ -178,7 +198,10 @@ def render_dashboard(
         layout="wide",
         initial_sidebar_state="expanded",
     )
-    view_model = _render_sidebar(view_model, upload_handler)
+    stored_view = st.session_state.get("ev_chargeops_view_model")
+    if isinstance(stored_view, DashboardViewModel):
+        view_model = stored_view
+    view_model = _render_sidebar(view_model, process_handler)
 
     st.title(view_model.title)
     st.caption(view_model.subtitle)

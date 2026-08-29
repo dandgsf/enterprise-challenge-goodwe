@@ -1,6 +1,35 @@
 """Entrypoint local do dashboard Streamlit."""
 
-from ev_chargeops.dashboard import render_dashboard
-from ev_chargeops.viewmodels import empty_dashboard_view_model
+from decimal import Decimal
 
-render_dashboard(empty_dashboard_view_model())
+from ev_chargeops.composition import build_dashboard_view
+from ev_chargeops.dashboard import render_dashboard
+from ev_chargeops.viewmodels import DashboardViewModel
+
+
+def process_sources(
+    sessions_upload,
+    energy_upload,
+    tariff: Decimal,
+    common_cost: Decimal,
+) -> DashboardViewModel:
+    """Processa uploads pareados ou recarrega os dados simulados incluidos."""
+
+    if sessions_upload is None and energy_upload is None:
+        return build_dashboard_view(
+            tariff_per_kwh=tariff,
+            monthly_common_cost=common_cost,
+        )
+    if sessions_upload is None or energy_upload is None:
+        raise ValueError("Os dois arquivos CSV precisam ser enviados em conjunto.")
+    return build_dashboard_view(
+        sessions_upload.getvalue(),
+        energy_upload.getvalue(),
+        sessions_filename=sessions_upload.name,
+        energy_filename=energy_upload.name,
+        tariff_per_kwh=tariff,
+        monthly_common_cost=common_cost,
+    )
+
+
+render_dashboard(build_dashboard_view(), process_handler=process_sources)
