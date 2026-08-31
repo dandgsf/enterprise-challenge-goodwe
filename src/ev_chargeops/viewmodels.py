@@ -127,12 +127,16 @@ class InvoiceItemViewModel:
 
 @dataclass(frozen=True, slots=True)
 class EnergyPointViewModel:
-    """Ponto numerico de uma serie energetica ja selecionada."""
+    """Ponto numérico de uma série energética já selecionada."""
 
     recorded_at: str
     solar_kw: float
     load_kw: float
     grid_kw: float
+    solar_generation_kwh: float = 0.0
+    load_consumption_kwh: float = 0.0
+    grid_consumption_kwh: float = 0.0
+    exported_kwh: float = 0.0
 
     def as_chart_row(self) -> dict[str, str | float]:
         return {
@@ -140,6 +144,16 @@ class EnergyPointViewModel:
             "Solar (kW)": self.solar_kw,
             "Carga (kW)": self.load_kw,
             "Rede (kW)": self.grid_kw,
+        }
+
+    def as_balance_chart_row(self) -> dict[str, str | float]:
+        """Expõe leituras acumuladas para a visão comparativa do gráfico."""
+        return {
+            "Horário": self.recorded_at,
+            "Geração solar (kWh)": self.solar_generation_kwh,
+            "Consumo da carga (kWh)": self.load_consumption_kwh,
+            "Consumo da rede (kWh)": self.grid_consumption_kwh,
+            "Excedente injetado (kWh)": self.exported_kwh,
         }
 
 

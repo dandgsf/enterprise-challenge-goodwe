@@ -1,3 +1,30 @@
 [server]
 maxUploadSize = 5
 maxMessageSize = 6
+
+[theme]
+base = "dark"
+primaryColor = "#E60013"
+backgroundColor = "#0E151B"
+secondaryBackgroundColor = "#1B2731"
+textColor = "#F4F7F9"
+borderColor = "#3B4B57"
+showWidgetBorder = true
+dataframeBorderColor = "#526470"
+dataframeHeaderBackgroundColor = "#263640"
+linkColor = "#7CC7FF"
+redTextColor = "#FF8992"
+orangeTextColor = "#FFB86B"
+yellowTextColor = "#FFD166"
+blueTextColor = "#7CC7FF"
+greenTextColor = "#63D2C6"
+violetTextColor = "#C4A7FF"
+grayTextColor = "#B8C5CE"
+chartCategoricalColors = [
+    "#F6C453",
+    "#4CC9F0",
+    "#C4A7FF",
+    "#42D3B7",
+    "#FF8992",
+    "#B8C5CE",
+]
