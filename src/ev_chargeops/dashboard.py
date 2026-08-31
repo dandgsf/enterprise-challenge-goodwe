@@ -22,20 +22,20 @@ ProcessHandler = Callable[
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 GOODWE_LOGO_PATH = PROJECT_ROOT / "assets" / "brand" / "goodwe.svg"
 FIAP_ON_LOGO_PATH = PROJECT_ROOT / "assets" / "brand" / "fiap-on.svg"
-POWER_CHART_COLORS = ["#B45309", "#0369A1", "#6D28D9"]
-BALANCE_CHART_COLORS = ["#B45309", "#0369A1", "#6D28D9", "#0F766E"]
+POWER_CHART_COLORS = ["#F6C453", "#4CC9F0", "#C4A7FF"]
+BALANCE_CHART_COLORS = ["#F6C453", "#4CC9F0", "#C4A7FF", "#42D3B7"]
 
 THEME_CSS = """
 <style>
     :root {
-        --ops-ink: #17232d;
-        --ops-muted: #435460;
-        --ops-surface: #ffffff;
-        --ops-canvas: #f4f7f8;
-        --ops-border: #b8c4cd;
+        --ops-ink: #f4f7f9;
+        --ops-muted: #b8c5ce;
+        --ops-surface: #17222b;
+        --ops-canvas: #0e151b;
+        --ops-border: #3b4b57;
         --ops-red: #e60013;
-        --ops-red-strong: #a80016;
-        --ops-teal: #0f766e;
+        --ops-red-strong: #ff6b76;
+        --ops-teal: #42d3b7;
     }
 
     .stApp {
@@ -44,8 +44,8 @@ THEME_CSS = """
     }
 
     [data-testid="stSidebar"] > div:first-child {
-        background: #17232d;
-        border-right: 1px solid #2f414d;
+        background: #080d12;
+        border-right: 1px solid #2b3a45;
     }
 
     [data-testid="stSidebar"] h2,
@@ -71,7 +71,7 @@ THEME_CSS = """
 
     [data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] button,
     [data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] button * {
-        color: #17232d !important;
+        color: #f4f7f9 !important;
         opacity: 1 !important;
     }
 
@@ -95,21 +95,21 @@ THEME_CSS = """
         background: var(--ops-surface);
         border: 1px solid var(--ops-border);
         border-radius: 16px;
-        box-shadow: 0 16px 34px -28px rgba(20, 33, 43, 0.58);
+        box-shadow: 0 18px 38px -28px rgba(0, 0, 0, 0.88);
     }
 
     [data-testid="stMetric"] {
         background: var(--ops-surface);
         border-top: 3px solid var(--ops-red);
         border-radius: 14px;
-        box-shadow: 0 14px 28px -24px rgba(20, 33, 43, 0.58);
+        box-shadow: 0 14px 28px -22px rgba(0, 0, 0, 0.92);
         min-height: 7.4rem;
         padding: 0.9rem 1rem 0.75rem;
         transition: transform 180ms ease, box-shadow 180ms ease;
     }
 
     [data-testid="stMetric"]:hover {
-        box-shadow: 0 18px 30px -24px rgba(20, 33, 43, 0.72);
+        box-shadow: 0 18px 32px -22px rgba(0, 0, 0, 1);
         transform: translateY(-2px);
     }
 
@@ -135,6 +135,11 @@ THEME_CSS = """
         transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
     }
 
+    .stButton > button[kind="primary"],
+    .stButton > button[kind="primary"] p {
+        color: #ffffff !important;
+    }
+
     .stButton > button[kind="primary"]:hover {
         background: #bf0010;
         border-color: #bf0010;
@@ -152,7 +157,7 @@ THEME_CSS = """
     }
 
     button[data-baseweb="tab"] {
-        color: #34434f !important;
+        color: #c4d0d8 !important;
         font-weight: 650;
         padding: 0.45rem 0.25rem 0.65rem;
     }
@@ -167,26 +172,26 @@ THEME_CSS = """
 
     [data-testid="stSelectbox"] label p,
     [data-testid="stRadio"] label p {
-        color: #263640 !important;
+        color: #e6edf2 !important;
         font-weight: 600;
     }
 
     [data-testid="stTable"] thead tr,
     [data-testid="stTable"] thead th {
-        background: #dce5eb !important;
+        background: #263640 !important;
     }
 
     [data-testid="stTable"] thead th p {
-        color: #17232d !important;
+        color: #f4f7f9 !important;
         font-weight: 700;
     }
 
     [data-testid="stTable"] tbody td p {
-        color: #263640 !important;
+        color: #e6edf2 !important;
     }
 
     [data-testid="stTable"] tbody tr:nth-child(even) {
-        background: #f7f9fa;
+        background: #111b23;
     }
 
     [data-testid="stAlert"] {

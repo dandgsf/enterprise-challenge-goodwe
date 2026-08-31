@@ -3,28 +3,28 @@ maxUploadSize = 5
 maxMessageSize = 6
 
 [theme]
-base = "light"
+base = "dark"
 primaryColor = "#E60013"
-backgroundColor = "#F4F7F8"
-secondaryBackgroundColor = "#E6ECF0"
-textColor = "#17232D"
-borderColor = "#B8C4CD"
+backgroundColor = "#0E151B"
+secondaryBackgroundColor = "#1B2731"
+textColor = "#F4F7F9"
+borderColor = "#3B4B57"
 showWidgetBorder = true
-dataframeBorderColor = "#AAB8C2"
-dataframeHeaderBackgroundColor = "#DCE5EB"
-linkColor = "#075985"
-redTextColor = "#A80016"
-orangeTextColor = "#8A3F00"
-yellowTextColor = "#713F12"
-blueTextColor = "#075985"
-greenTextColor = "#0F5F55"
-violetTextColor = "#5B21B6"
-grayTextColor = "#435460"
+dataframeBorderColor = "#526470"
+dataframeHeaderBackgroundColor = "#263640"
+linkColor = "#7CC7FF"
+redTextColor = "#FF8992"
+orangeTextColor = "#FFB86B"
+yellowTextColor = "#FFD166"
+blueTextColor = "#7CC7FF"
+greenTextColor = "#63D2C6"
+violetTextColor = "#C4A7FF"
+grayTextColor = "#B8C5CE"
 chartCategoricalColors = [
-    "#B45309",
-    "#0369A1",
-    "#6D28D9",
-    "#0F766E",
-    "#A80016",
-    "#475569",
+    "#F6C453",
+    "#4CC9F0",
+    "#C4A7FF",
+    "#42D3B7",
+    "#FF8992",
+    "#B8C5CE",
 ]
