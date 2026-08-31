@@ -22,16 +22,19 @@ ProcessHandler = Callable[
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 GOODWE_LOGO_PATH = PROJECT_ROOT / "assets" / "brand" / "goodwe.svg"
 FIAP_ON_LOGO_PATH = PROJECT_ROOT / "assets" / "brand" / "fiap-on.svg"
+POWER_CHART_COLORS = ["#B45309", "#0369A1", "#6D28D9"]
+BALANCE_CHART_COLORS = ["#B45309", "#0369A1", "#6D28D9", "#0F766E"]
 
 THEME_CSS = """
 <style>
     :root {
-        --ops-ink: #14212b;
-        --ops-muted: #61717f;
+        --ops-ink: #17232d;
+        --ops-muted: #435460;
         --ops-surface: #ffffff;
         --ops-canvas: #f4f7f8;
-        --ops-border: #d8e1e7;
+        --ops-border: #b8c4cd;
         --ops-red: #e60013;
+        --ops-red-strong: #a80016;
         --ops-teal: #0f766e;
     }
 
@@ -49,12 +52,14 @@ THEME_CSS = """
     [data-testid="stSidebar"] h3,
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
-        color: #f8fafc;
+        color: #f8fafc !important;
     }
 
+    [data-testid="stSidebar"] [data-testid="stCaptionContainer"],
     [data-testid="stSidebar"] [data-testid="stCaptionContainer"] p,
     [data-testid="stSidebar"] small {
-        color: #cbd5df;
+        color: #dce6ed !important;
+        opacity: 1 !important;
     }
 
     [data-testid="stSidebar"] [data-testid="stFileUploader"] {
@@ -64,8 +69,20 @@ THEME_CSS = """
         padding: 0.65rem;
     }
 
+    [data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] button,
+    [data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] button * {
+        color: #17232d !important;
+        opacity: 1 !important;
+    }
+
     [data-testid="stSidebar"] [data-baseweb="input"] {
         border-radius: 10px;
+    }
+
+    [data-testid="stMainBlockContainer"] [data-testid="stCaptionContainer"],
+    [data-testid="stMainBlockContainer"] [data-testid="stCaptionContainer"] p {
+        color: var(--ops-muted) !important;
+        opacity: 1 !important;
     }
 
     h1, h2, h3 {
@@ -97,9 +114,9 @@ THEME_CSS = """
     }
 
     [data-testid="stMetricLabel"] p {
-        color: var(--ops-muted);
+        color: var(--ops-muted) !important;
         font-size: 0.78rem;
-        font-weight: 650;
+        font-weight: 700;
         letter-spacing: 0.01em;
         white-space: normal;
     }
@@ -135,13 +152,41 @@ THEME_CSS = """
     }
 
     button[data-baseweb="tab"] {
-        color: var(--ops-muted);
+        color: #34434f !important;
         font-weight: 650;
         padding: 0.45rem 0.25rem 0.65rem;
     }
 
     button[data-baseweb="tab"][aria-selected="true"] {
-        color: var(--ops-red);
+        color: var(--ops-red-strong) !important;
+    }
+
+    button[data-baseweb="tab"] p {
+        color: inherit !important;
+    }
+
+    [data-testid="stSelectbox"] label p,
+    [data-testid="stRadio"] label p {
+        color: #263640 !important;
+        font-weight: 600;
+    }
+
+    [data-testid="stTable"] thead tr,
+    [data-testid="stTable"] thead th {
+        background: #dce5eb !important;
+    }
+
+    [data-testid="stTable"] thead th p {
+        color: #17232d !important;
+        font-weight: 700;
+    }
+
+    [data-testid="stTable"] tbody td p {
+        color: #263640 !important;
+    }
+
+    [data-testid="stTable"] tbody tr:nth-child(even) {
+        background: #f7f9fa;
     }
 
     [data-testid="stAlert"] {
@@ -171,6 +216,12 @@ THEME_CSS = """
     @keyframes ops-pulse {
         0%, 100% { opacity: 0.6; transform: scale(0.9); }
         50% { opacity: 1; transform: scale(1.15); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ops-signal__dot { animation: none; }
+        [data-testid="stMetric"],
+        .stButton > button[kind="primary"] { transition: none; }
     }
 
     @media (max-width: 760px) {
@@ -226,7 +277,8 @@ def _render_brand_header(view_model: DashboardViewModel) -> None:
             with fiap_column:
                 st.image(FIAP_ON_LOGO_PATH, width=112)
             st.markdown(
-                "<div class='ops-signal'><span class='ops-signal__dot'></span>"
+                "<div class='ops-signal' role='status'>"
+                "<span class='ops-signal__dot' aria-hidden='true'></span>"
                 "Modo demonstrativo · processamento local</div>",
                 unsafe_allow_html=True,
             )
@@ -369,13 +421,13 @@ def _render_energy(view_model: DashboardViewModel) -> None:
         if chart_mode == "Potência instantânea":
             chart_data = pd.DataFrame(point.as_chart_row() for point in view_model.energy_points)
             chart_data = chart_data.set_index("Horário")
-            st.line_chart(chart_data, width="stretch")
+            st.line_chart(chart_data, color=POWER_CHART_COLORS, width="stretch")
         else:
             balance_data = pd.DataFrame(
                 point.as_balance_chart_row() for point in view_model.energy_points
             )
             balance_data = balance_data.set_index("Horário")
-            st.area_chart(balance_data, width="stretch")
+            st.line_chart(balance_data, color=BALANCE_CHART_COLORS, width="stretch")
     else:
         st.info("Nenhum snapshot energético disponível.")
 
